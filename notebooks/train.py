@@ -23,6 +23,7 @@ import glob
 import yaml
 from sklearn.model_selection import StratifiedKFold
 from tqdm import tqdm
+from utils import *
 
 parser = argparse.ArgumentParser(description='Baseline')
 parser.add_argument("--file", type=Path)
@@ -32,4 +33,9 @@ with open(str(args.file), "r") as stream:
 
 
 def main(cfg):
-	train_csv = pd.read_csv(cfg['train_file_path'])
+	train_df = pd.read_csv(cfg['train_file_path'])
+	RANDOM_SEED = 42
+	seed_everything(RANDOM_SEED)
+	for i in cfg.folds:
+		train = train_df[train_df['kfold'] != fold]
+		valid = train_df[train_df['kfold'] == fold]

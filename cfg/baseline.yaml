@@ -1,3 +1,13 @@
 model: resnet34d
 batch_size : 16
 image_size : 512
+seed : 42
+train_dir  : F:/Pycharm_projects/UltraMNIST/data/train
+test_dir : F:/Pycharm_projects/UltraMNIST/data/test
+train_file_path : F:/Pycharm_projects/UltraMNIST/data/train_folds_5.csv
+epochs: 10
+in_channels: 1
+folds:
+      - 0
+      - 1
+      - 2

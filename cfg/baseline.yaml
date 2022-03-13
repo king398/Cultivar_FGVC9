@@ -1,27 +1,32 @@
-model: resnet34d
-batch_size : 16
+model: resnet50
+batch_size : 8
 image_size : 512
 seed : 42
 pretrained : true
-num_workers : 4
+num_workers : 0
 pin_memory : true
 
 train_dir  : F:/Pycharm_projects/UltraMNIST/data/train
 test_dir : F:/Pycharm_projects/UltraMNIST/data/test
-train_file_path : F:/Pycharm_projects/UltraMNIST/data/train_folds_5.csv
+train_file_path : F:/Pycharm_projects/UltraMNIST/data/train.csv
 epochs: 10
 in_channels: 1
 folds:
       - 0
       - 1
       - 2
+      - 3
+      - 4
+
 scheduler_name: CosineAnnealingWarmRestarts
 T_0: 5
 T_max: 5
 T_mult: 1
 min_lr: 1e-7
 max_lr: 1e-4
-lr: 1e-5,
+lr: 1e-5
 weight_decay: 1e-6
 target_size : 28
 device : cuda
+model_dir : F:/Pycharm_projects/UltraMNIST/models/baseline_resnet50
+n_fold: 5

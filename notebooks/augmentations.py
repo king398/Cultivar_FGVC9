@@ -7,8 +7,8 @@ def get_valid_transforms(DIM):
 		[
 			albumentations.Resize(DIM, DIM),
 			albumentations.Normalize(
-				mean=[0.1307],
-				std=[0.3081],
+				mean=0.1307,
+				std=0.3081,
 			),
 			ToTensorV2(p=1.0)
 		]
@@ -20,8 +20,8 @@ def get_train_transforms(DIM):
 		[
 			albumentations.Resize(DIM, DIM),
 			albumentations.Normalize(
-				mean=[0.1307],
-				std=[0.3081],
+				mean=0.1307,
+				std=0.3081,
 			),
 			ToTensorV2(p=1.0)
 		]

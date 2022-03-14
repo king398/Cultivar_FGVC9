@@ -1,4 +1,4 @@
-model: resnet50
+model: tf_efficientnet_b3_ns
 batch_size : 8
 image_size : 512
 seed : 42
@@ -30,3 +30,4 @@ target_size : 28
 device : cuda
 model_dir : F:/Pycharm_projects/UltraMNIST/models/baseline_resnet50
 n_fold: 5
+task : classification

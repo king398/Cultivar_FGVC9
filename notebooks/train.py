@@ -42,9 +42,7 @@ def main(cfg):
 	for fold, (trn_index, val_index) in enumerate(skf.split(train_df, train_df.digit_sum)):
 		if fold in cfg['folds']:
 
-
 			train = train_df.iloc[trn_index]
-
 
 			valid = train_df.iloc[val_index]
 			train, valid = train.reset_index(drop=True), valid.reset_index(drop=True)
@@ -52,7 +50,7 @@ def main(cfg):
 			train_labels = train['digit_sum']
 			valid_path = valid['path']
 			valid_labels = valid['digit_sum']
-			print(train_path[5448])
+			print(len(valid_labels))
 
 			train_dataset = MNIST_data(image_path=train_path,
 			                           cfg=cfg,
@@ -74,14 +72,19 @@ def main(cfg):
 
 			model = BaseModel(cfg)
 			model.to(device)
-			criterion = nn.CrossEntropyLoss()
+			if cfg['task'] == "regression":
+				criterion = nn.BCEWithLogitsLoss()
+			else:
+				criterion = nn.CrossEntropyLoss()
+
+
 			optimizer = optim.AdamW(model.parameters(), lr=float(cfg['lr']),
 			                        weight_decay=float(cfg['weight_decay']),
 			                        amsgrad=False)
 			scheduler = get_scheduler(optimizer, cfg)
 			for epoch in range(cfg['epochs']):
 				train_fn(train_loader, model, criterion, optimizer, epoch, cfg, scheduler)
-				validate_fn(train_loader, model, criterion, epoch, cfg)
+				validate_fn(val_loader, model, criterion, epoch, cfg)
 				torch.save(model.state_dict(), f"{cfg['model_dir']}/{cfg['model']}_fold{fold}")
 				gc.collect()
 				torch.cuda.empty_cache()

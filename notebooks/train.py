@@ -47,9 +47,9 @@ def main(cfg):
 			valid = train_df.iloc[val_index]
 			train, valid = train.reset_index(drop=True), valid.reset_index(drop=True)
 			train_path = train['path']
-			train_labels = train['digit_sum']
+			train_labels = train['digit_sum'] / 27
 			valid_path = valid['path']
-			valid_labels = valid['digit_sum']
+			valid_labels = valid['digit_sum'] / 27
 			print(len(valid_labels))
 
 			train_dataset = MNIST_data(image_path=train_path,

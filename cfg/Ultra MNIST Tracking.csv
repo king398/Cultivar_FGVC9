@@ -14,7 +14,7 @@ lr,0.00001
 weight_decay,0.000001
 target_size,28
 n_fold,5
-Fold 0 Cv,
+Fold 0 Cv,0.318
 Fold 1 Cv,
 Fold 2 Cv,
 Fold 3 Cv,

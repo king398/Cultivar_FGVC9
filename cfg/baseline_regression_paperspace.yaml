@@ -1,9 +1,9 @@
 model: tf_efficientnet_b3_ns
-batch_size : 8
+batch_size : 16
 image_size : 512
 seed : 42
 pretrained : true
-num_workers : 0
+num_workers : 4
 pin_memory : true
 
 train_dir  : F:/Pycharm_projects/UltraMNIST/data/train_patches

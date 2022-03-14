@@ -11,7 +11,11 @@ def train_fn(train_loader, model, criterion, optimizer, epoch, cfg, scheduler=No
 	stream = tqdm(train_loader)
 	for i, (images, target) in enumerate(stream, start=1):
 		images = images.to(device, non_blocking=True)
-		target = target.to(device, non_blocking=True).float()
+		if cfg['task'] == "regression":
+			target = target.to(device, non_blocking=True).float()
+		else:
+			target = target.to(device, non_blocking=True).long()
+
 		with autocast():
 			output = model(images).squeeze()
 		loss = criterion(output, target)
@@ -39,11 +43,17 @@ def validate_fn(val_loader, model, criterion, epoch, cfg):
 	with torch.no_grad():
 		for i, (images, target) in enumerate(stream, start=1):
 			images = images.to(device, non_blocking=True)
-			target = target.to(device, non_blocking=True).long()
+			if cfg['task'] == "regression":
+				target = target.to(device, non_blocking=True).float()
+			else:
+				target = target.to(device, non_blocking=True).long()
 			with autocast():
 				output = model(images).squeeze()
 			loss = criterion(output, target)
-			accuracy = accuracy_score(output, target)
+			if cfg['task'] == "regression":
+				accuracy = accuracy_score_regress(output, target)
+			else:
+				accuracy = accuracy_score(output, target)
 			metric_monitor.update("Loss", loss.item())
 			metric_monitor.update("Accuracy", accuracy)
 			stream.set_description(f"Epoch: {epoch:02}. Valid. {metric_monitor}")

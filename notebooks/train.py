@@ -46,16 +46,11 @@ def main(cfg):
 
 			valid = train_df.iloc[val_index]
 			train, valid = train.reset_index(drop=True), valid.reset_index(drop=True)
-			if cfg['task'] == "regression":
-				train_path = train['path']
-				train_labels = train['digit_sum'] / 27
-				valid_path = valid['path']
-				valid_labels = valid['digit_sum'] / 27
-			else:
-				train_path = train['path']
-				train_labels = train['digit_sum']
-				valid_path = valid['path']
-				valid_labels = valid['digit_sum']
+
+			train_path = train['path']
+			train_labels = train['digit_sum']
+			valid_path = valid['path']
+			valid_labels = valid['digit_sum']
 
 
 
@@ -79,10 +74,7 @@ def main(cfg):
 
 			model = BaseModel(cfg)
 			model.to(device)
-			if cfg['task'] == "regression":
-				criterion = nn.BCEWithLogitsLoss()
-			else:
-				criterion = nn.CrossEntropyLoss()
+			criterion = nn.CrossEntropyLoss()
 
 
 			optimizer = optim.AdamW(model.parameters(), lr=float(cfg['lr']),

@@ -16,7 +16,6 @@ def train_fn(train_loader, model, criterion, optimizer, epoch, cfg, scheduler=No
 
 		with autocast():
 			output = model(images)
-			print(output)
 		loss = criterion(output, target)
 
 		accuracy = accuracy_score(output, target)

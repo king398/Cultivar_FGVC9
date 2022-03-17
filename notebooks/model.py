@@ -134,17 +134,18 @@ class ArcModule(nn.Module):
 		outputs = outputs * self.s
 		return outputs
 
-	class BaseModel(nn.Module):
-		def __init__(self, cfg):
-			super().__init__()
-			self.cfg = cfg
-			self.model = timm.create_model(self.cfg['model'], pretrained=self.cfg['pretrained'],
-			                               in_chans=self.cfg['in_channels'],
-			                               num_classes=0)
-			self.fc = nn.LazyLinear(self.cfg['target_size'])
 
-		def forward(self, x):
-			embeddings = self.model(x)
-			logits = self.fc(embeddings)
+class BaseModel(nn.Module):
+	def __init__(self, cfg):
+		super().__init__()
+		self.cfg = cfg
+		self.model = timm.create_model(self.cfg['model'], pretrained=self.cfg['pretrained'],
+		                               in_chans=self.cfg['in_channels'],
+		                               num_classes=0)
+		self.fc = nn.LazyLinear(self.cfg['target_size'])
 
-			return logits
+	def forward(self, x):
+		embeddings = self.model(x)
+		logits = self.fc(embeddings)
+
+		return logits

@@ -29,8 +29,6 @@ from train_func import *
 # Passing Argument to get filepath to load our file which in our case is a yaml file
 
 
-
-
 # Main Function to do all our training with help of helper functions
 def main(cfg):
 	train_df = pd.read_csv(cfg['train_file_path'])
@@ -42,7 +40,8 @@ def main(cfg):
 	device = return_device()
 	skf = StratifiedKFold(n_splits=cfg['n_fold'])
 	label_encoder = preprocessing.LabelEncoder()
-	train_df['cultivar'] = label_encoder.fit(train_df['cultivar'].values)
+	train_df['cultivar'] = label_encoder.fit_transform(train_df['cultivar'])
+
 	for fold, (trn_index, val_index) in enumerate(skf.split(train_df, train_df.cultivar)):
 		if fold in cfg['folds']:
 

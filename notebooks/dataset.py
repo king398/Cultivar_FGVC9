@@ -17,6 +17,7 @@ class Cultivar_data(Dataset):
 	def __getitem__(self, idx):
 
 		image_path_single = self.image_path[idx]
+		print(image_path_single)
 		if self.cfg['in_channels'] == 1:
 			image = cv2.imread(image_path_single, cv2.IMREAD_GRAYSCALE)
 		else:

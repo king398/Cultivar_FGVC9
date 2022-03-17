@@ -50,9 +50,9 @@ def main(cfg):
 			valid = train_df.iloc[val_index]
 			train, valid = train.reset_index(drop=True), valid.reset_index(drop=True)
 
-			train_path = train['path']
+			train_path = train['file_path']
 			train_labels = train['cultivar']
-			valid_path = valid['path']
+			valid_path = valid['file_path']
 			valid_labels = valid['cultivar']
 
 			train_dataset = Cultivar_data(image_path=train_path,

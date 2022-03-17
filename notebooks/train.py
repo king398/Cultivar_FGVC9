@@ -11,7 +11,7 @@ import argparse
 import numpy as np
 import random
 from sklearn.model_selection import StratifiedKFold
-
+from sklearn import preprocessing
 ############# Deep learning Stuff #################
 import torch
 from torch.nn import functional as F
@@ -29,16 +29,20 @@ from train_func import *
 # Passing Argument to get filepath to load our file which in our case is a yaml file
 
 
+
+
 # Main Function to do all our training with help of helper functions
 def main(cfg):
 	train_df = pd.read_csv(cfg['train_file_path'])
-	train_df['path'] = train_df['id'].apply(
+	train_df['path'] = train_df['image'].apply(
 		lambda x: return_filpath(x, folder=cfg['train_dir']))
-	RANDOM_SEED = 42
-	seed_everything(RANDOM_SEED)
+
+	seed_everything(cfg['seed'])
 	gc.enable()
 	device = return_device()
 	skf = StratifiedKFold(n_splits=cfg['n_fold'])
+	label_encoder = preprocessing.LabelEncoder()
+	train_df['cultivar'] = label_encoder.fit(train_df['cultivar'].values)
 	for fold, (trn_index, val_index) in enumerate(skf.split(train_df, train_df.digit_sum)):
 		if fold in cfg['folds']:
 
@@ -48,20 +52,18 @@ def main(cfg):
 			train, valid = train.reset_index(drop=True), valid.reset_index(drop=True)
 
 			train_path = train['path']
-			train_labels = train['digit_sum']
+			train_labels = train['cultivar']
 			valid_path = valid['path']
-			valid_labels = valid['digit_sum']
+			valid_labels = valid['cultivar']
 
-
-
-			train_dataset = MNIST_data(image_path=train_path,
-			                           cfg=cfg,
-			                           targets=train_labels,
-			                           transform=get_train_transforms(cfg['image_size']))
-			valid_dataset = MNIST_data(image_path=valid_path,
-			                           cfg=cfg,
-			                           targets=valid_labels,
-			                           transform=get_valid_transforms(cfg['image_size']))
+			train_dataset = Cultivar_data(image_path=train_path,
+			                              cfg=cfg,
+			                              targets=train_labels,
+			                              transform=get_train_transforms(cfg['image_size']))
+			valid_dataset = Cultivar_data(image_path=valid_path,
+			                              cfg=cfg,
+			                              targets=valid_labels,
+			                              transform=get_valid_transforms(cfg['image_size']))
 			train_loader = DataLoader(
 				train_dataset, batch_size=cfg['batch_size'], shuffle=True,
 				num_workers=cfg['num_workers'], pin_memory=cfg['pin_memory']
@@ -75,7 +77,6 @@ def main(cfg):
 			model = BaseModel(cfg)
 			model.to(device)
 			criterion = nn.CrossEntropyLoss()
-
 
 			optimizer = optim.AdamW(model.parameters(), lr=float(cfg['lr']),
 			                        weight_decay=float(cfg['weight_decay']),

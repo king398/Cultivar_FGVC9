@@ -10,6 +10,8 @@ def get_valid_transforms(DIM):
 				mean=0.1307,
 				std=0.3081,
 			),
+			albumentations.HorizontalFlip(),
+			albumentations.VerticalFlip(),
 			ToTensorV2(p=1.0)
 		]
 	)

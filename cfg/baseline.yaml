@@ -1,14 +1,14 @@
 model: tf_efficientnet_b0_ns
-batch_size : 8
+batch_size : 32
 image_size : 512
 seed : 42
 pretrained : true
-num_workers : 0
+num_workers : 4
 pin_memory : true
 
-train_dir  : F:/Pycharm_projects/UltraMNIST/data/train
-test_dir : F:/Pycharm_projects/UltraMNIST/data/test
-train_file_path : F:/Pycharm_projects/UltraMNIST/data/train.csv
+train_dir  : /content/train_img
+test_dir : /content/test_img
+train_file_path : /content/train_fixed_mapped.csv
 epochs: 10
 in_channels: 3
 folds:
@@ -28,5 +28,5 @@ lr: 1e-5
 weight_decay: 1e-6
 target_size : 100
 device : cuda
-model_dir : F:/Pycharm_projects/UltraMNIST/models/baseline_resnet50
+model_dir : /content/baseline_tf_efficientnet_b0_ns
 n_fold: 5

@@ -6,9 +6,9 @@ pretrained : true
 num_workers : 4
 pin_memory : true
 
-train_dir  : /content/train_img
-test_dir : /content/test_img
-train_file_path : /content/train_fixed_mapped.csv
+train_dir  : ../input/cultivar-identification-jpeg/train_img
+test_dir : ../input/cultivar-identification-jpeg/test_img
+train_file_path : ../input/fgvc-9-train-fixed/train_fixed_mapped.csv
 epochs: 10
 in_channels: 3
 folds:
@@ -28,5 +28,5 @@ lr: 1e-5
 weight_decay: 1e-6
 target_size : 100
 device : cuda
-model_dir : /content/baseline_tf_efficientnet_b0_ns
+model_dir : ./baseline_tf_efficientnet_b0_ns
 n_fold: 5

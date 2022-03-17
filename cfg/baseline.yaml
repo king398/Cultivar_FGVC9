@@ -8,7 +8,7 @@ pin_memory : true
 
 train_dir  : ../input/cultivar-identification-jpeg/train_img
 test_dir : ../input/cultivar-identification-jpeg/test_img
-train_file_path : ../input/fgvc-9-train-fixed/train_fixed_mapped.csv
+train_file_path : ../input/train-fixed/train.csv
 epochs: 10
 in_channels: 3
 folds:

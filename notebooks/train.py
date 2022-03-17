@@ -43,7 +43,7 @@ def main(cfg):
 	skf = StratifiedKFold(n_splits=cfg['n_fold'])
 	label_encoder = preprocessing.LabelEncoder()
 	train_df['cultivar'] = label_encoder.fit(train_df['cultivar'].values)
-	for fold, (trn_index, val_index) in enumerate(skf.split(train_df, train_df.digit_sum)):
+	for fold, (trn_index, val_index) in enumerate(skf.split(train_df, train_df.cultivar)):
 		if fold in cfg['folds']:
 
 			train = train_df.iloc[trn_index]

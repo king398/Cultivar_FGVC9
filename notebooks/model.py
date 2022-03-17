@@ -7,6 +7,8 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 
+import math
+
 
 class BasicConv(nn.Module):
 	def __init__(self, in_planes, out_planes, kernel_size, stride=1, padding=0, dilation=1, groups=1, relu=True,
@@ -72,17 +74,77 @@ class TripletAttention(nn.Module):
 		return x_out
 
 
-class BaseModel(nn.Module):
-	def __init__(self, cfg):
-		super().__init__()
-		self.cfg = cfg
-		self.model = timm.create_model(self.cfg['model'], pretrained=self.cfg['pretrained'],
-		                               in_chans=self.cfg['in_channels'],
-		                               num_classes=0)
-		self.fc = nn.LazyLinear(self.cfg['target_size'])
+class GeM(nn.Module):
+	'''
+	Code modified from the 2d code in
+	https://amaarora.github.io/2020/08/30/gempool.html
+	'''
+
+	def __init__(self, kernel_size=8, p=3, eps=1e-6):
+		super(GeM, self).__init__()
+		self.p = nn.Parameter(torch.ones(1) * p)
+		self.kernel_size = kernel_size
+		self.eps = eps
 
 	def forward(self, x):
-		embeddings = self.model(x)
-		logits = self.fc(embeddings)
+		return self.gem(x, p=self.p, eps=self.eps)
 
-		return logits
+	def gem(self, x, p=3, eps=1e-6):
+		return F.avg_pool1d(x.clamp(min=eps).pow(p), self.kernel_size).pow(1. / p)
+
+	def __repr__(self):
+		return self.__class__.__name__ + \
+		       '(' + 'p=' + '{:.4f}'.format(self.p.data.tolist()[0]) + \
+		       ', ' + 'eps=' + str(self.eps) + ')'
+
+
+class ArcModule(nn.Module):
+	def __init__(self, in_features, out_features, s, m):
+		super().__init__()
+		self.in_features = in_features
+		self.out_features = out_features
+		self.s = s
+		self.m = m
+		self.weight = nn.Parameter(torch.FloatTensor(out_features, in_features))
+		nn.init.xavier_normal_(self.weight)
+
+		self.cos_m = math.cos(m)
+		self.sin_m = math.sin(m)
+		self.th = torch.tensor(math.cos(math.pi - m))
+		self.mm = torch.tensor(math.sin(math.pi - m) * m)
+
+	def forward(self, inputs, labels):
+		cos_th = F.linear(inputs, F.normalize(self.weight))
+		cos_th = cos_th.clamp(-1, 1)
+		sin_th = torch.sqrt(1.0 - torch.pow(cos_th, 2))
+		cos_th_m = cos_th * self.cos_m - sin_th * self.sin_m
+		# print(type(cos_th), type(self.th), type(cos_th_m), type(self.mm))
+		cos_th_m = torch.where(cos_th > self.th, cos_th_m, cos_th - self.mm)
+
+		cond_v = cos_th - self.th
+		cond = cond_v <= 0
+		cos_th_m[cond] = (cos_th - self.mm)[cond]
+
+		if labels.dim() == 1:
+			labels = labels.unsqueeze(-1)
+		onehot = torch.zeros(cos_th.size()).cuda()
+		labels = labels.type(torch.LongTensor).cuda()
+		onehot.scatter_(1, labels, 1.0)
+		outputs = onehot * cos_th_m + (1.0 - onehot) * cos_th
+		outputs = outputs * self.s
+		return outputs
+
+	class BaseModel(nn.Module):
+		def __init__(self, cfg):
+			super().__init__()
+			self.cfg = cfg
+			self.model = timm.create_model(self.cfg['model'], pretrained=self.cfg['pretrained'],
+			                               in_chans=self.cfg['in_channels'],
+			                               num_classes=0)
+			self.fc = nn.LazyLinear(self.cfg['target_size'])
+
+		def forward(self, x):
+			embeddings = self.model(x)
+			logits = self.fc(embeddings)
+
+			return logits

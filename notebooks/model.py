@@ -141,11 +141,12 @@ class BaseModel(nn.Module):
 		self.cfg = cfg
 		self.model = timm.create_model(self.cfg['model'], pretrained=self.cfg['pretrained'],
 		                               in_chans=self.cfg['in_channels'],
-		                               num_classes=0)
-		self.fc = nn.LazyLinear(self.cfg['target_size'])
+		                               num_classes=100)
+		n_features = self.model.fc.in_features
+		self.model.head = nn.Linear(n_features, cfg['target_size'])
 
 	def forward(self, x):
-		embeddings = self.model(x)
-		logits = self.fc(embeddings)
+		output = self.model(x)
 
-		return logits
+
+		return output

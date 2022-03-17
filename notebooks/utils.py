@@ -55,14 +55,7 @@ def accuracy_score(output, labels):
 	return accuracy
 
 
-def accuracy_score_regress(output, labels):
-	output = torch.sigmoid(output)
-	output = output * 27
-	labels = labels * 27
-	output = torch.round(output)
-	accuracy = (output== labels).float().mean()
-	accuracy = accuracy.detach().cpu().numpy()
-	return accuracy
+
 
 
 class MetricMonitor:

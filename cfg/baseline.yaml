@@ -1,6 +1,6 @@
 model: tf_efficientnet_b3_ns
-batch_size : 16
-image_size : 1024
+batch_size : 32
+image_size : 512
 seed : 42
 pretrained : true
 num_workers : 4

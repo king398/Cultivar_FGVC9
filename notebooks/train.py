@@ -76,9 +76,8 @@ def main(cfg):
 			model.to(device)
 			criterion = nn.CrossEntropyLoss()
 
-			optimizer = optim.AdamW(model.parameters(), lr=float(cfg['lr']),
-			                        weight_decay=float(cfg['weight_decay']),
-			                        amsgrad=False)
+			optimizer = optim.Adam(model.parameters(), lr=float(cfg['lr']),
+			                        )
 			scheduler = get_scheduler(optimizer, cfg)
 			for epoch in range(cfg['epochs']):
 				train_fn(train_loader, model, criterion, optimizer, epoch, cfg, scheduler)

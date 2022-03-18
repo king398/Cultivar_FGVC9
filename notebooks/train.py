@@ -32,8 +32,7 @@ from train_func import *
 # Main Function to do all our training with help of helper functions
 def main(cfg):
 	train_df = pd.read_csv(cfg['train_file_path'])
-	train_df['path'] = train_df['image'].apply(
-		lambda x: return_filpath(x, folder=cfg['train_dir']))
+	
 
 	seed_everything(cfg['seed'])
 	gc.enable()

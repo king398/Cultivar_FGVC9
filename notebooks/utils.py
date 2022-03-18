@@ -50,7 +50,6 @@ def mixup_criterion(criterion, pred, y_a, y_b, lam):
 
 def accuracy_score(output, labels):
 	output = torch.softmax(output, 1)
-	print(output.argmax(dim=1))
 	accuracy = (output.argmax(dim=1) == labels).float().mean()
 	accuracy = accuracy.detach().cpu().numpy()
 	return accuracy

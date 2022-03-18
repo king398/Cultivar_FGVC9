@@ -2,6 +2,8 @@ from tqdm.auto import tqdm
 import torch
 from torch.cuda.amp import autocast
 from utils import *
+import numpy as np
+
 
 
 def train_fn(train_loader, model, criterion, optimizer, epoch, cfg, scheduler=None):
@@ -36,6 +38,7 @@ def validate_fn(val_loader, model, criterion, epoch, cfg):
 	metric_monitor = MetricMonitor()
 	model.eval()
 	stream = tqdm(val_loader)
+	accuracy_list = []
 	with torch.no_grad():
 		for i, (images, target) in enumerate(stream, start=1):
 			images = images.to(device, non_blocking=True)
@@ -49,3 +52,6 @@ def validate_fn(val_loader, model, criterion, epoch, cfg):
 			metric_monitor.update("Loss", loss.item())
 			metric_monitor.update("Accuracy", accuracy)
 			stream.set_description(f"Epoch: {epoch:02}. Valid. {metric_monitor}")
+			accuracy_list.append(accuracy)
+	return np.mean(accuracy_list)
+			

@@ -40,7 +40,8 @@ def main(cfg):
 	skf = StratifiedKFold(n_splits=cfg['n_fold'])
 	label_encoder = preprocessing.LabelEncoder()
 	train_df['cultivar'] = label_encoder.fit_transform(train_df['cultivar'])
-
+	best_model_name = None
+	best_accuracy = - np.inf
 	for fold, (trn_index, val_index) in enumerate(skf.split(train_df, train_df.cultivar)):
 		if fold in cfg['folds']:
 
@@ -81,10 +82,19 @@ def main(cfg):
 			scheduler = get_scheduler(optimizer, cfg)
 			for epoch in range(cfg['epochs']):
 				train_fn(train_loader, model, criterion, optimizer, epoch, cfg, scheduler)
-				validate_fn(val_loader, model, criterion, epoch, cfg)
-				torch.save(model.state_dict(), f"{cfg['model_dir']}/{cfg['model']}_fold{fold}")
+				accuracy = validate_fn(val_loader, model, criterion, epoch, cfg)
+				#torch.save(model.state_dict(), f"{cfg['model_dir']}/{cfg['model']}_fold{fold}")
+				if accuracy  > best_accuracy:
+					best_accuracy = accuracy
+					if best_model_name is not None:
+						os.remove(best_model_name)
+					torch.save(model.state_dict(), f"{cfg['model_dir']}/{cfg['model']}_fold{fold}_epoch{epoch}_accuracy{accuracy}")
+					best_model_name = f"{cfg['model_dir']}/{cfg['model']}_fold{fold}_epoch{epoch}_accuracy{accuracy}"
+
 				gc.collect()
 				torch.cuda.empty_cache()
+
+
 
 
 if __name__ == '__main__' and '__file__' in globals():

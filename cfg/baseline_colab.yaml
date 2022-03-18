@@ -1,5 +1,5 @@
-model: tf_efficientnet_b3_ns
-batch_size : 32
+model: resnet34
+batch_size : 64
 image_size : 512
 seed : 42
 pretrained : true
@@ -8,7 +8,7 @@ pin_memory : true
 
 train_dir  : /content/train
 test_dir : /content/test
-train_file_path : /content/train_colab.csv
+train_file_path : /content/train.csv
 epochs: 10
 in_channels: 3
 folds:
@@ -29,5 +29,5 @@ lr: 1e-5
 weight_decay: 1e-6
 target_size : 100
 device : cuda
-model_dir : /content/baseline_tf_efficientnet_b0_ns
+model_dir : /content/resnet34
 n_fold: 5

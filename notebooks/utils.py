@@ -50,6 +50,7 @@ def mixup_criterion(criterion, pred, y_a, y_b, lam):
 
 def accuracy_score(output, labels):
 	output = torch.softmax(output, 1)
+	print(output.argmax(dim=1))
 	accuracy = (output.argmax(dim=1) == labels).float().mean()
 	accuracy = accuracy.detach().cpu().numpy()
 	return accuracy
@@ -87,7 +88,7 @@ class MetricMonitor:
 
 def get_scheduler(optimizer, scheduler_params):
 	if scheduler_params['scheduler_name'] == 'CosineAnnealingWarmRestarts':
-		scheduler = CosineAnnealingWarmRestarts(
+		schedulers = CosineAnnealingWarmRestarts(
 			optimizer,
 			T_0=scheduler_params['T_0'],
 			eta_min=scheduler_params['min_lr'],
@@ -96,13 +97,13 @@ def get_scheduler(optimizer, scheduler_params):
 
 
 	elif scheduler_params['scheduler_name'] == 'CosineAnnealingLR':
-		scheduler = CosineAnnealingLR(
+		schedulers = CosineAnnealingLR(
 			optimizer,
 			T_max=scheduler_params['T_max'],
 			eta_min=scheduler_params['min_lr'],
 			last_epoch=-1
 		)
-	return scheduler
+	return schedulers
 
 
 def return_filpath(name, folder):

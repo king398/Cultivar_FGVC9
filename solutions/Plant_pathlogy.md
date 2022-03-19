@@ -15,6 +15,6 @@
        AdamW
         
        resnet50-5folds+resnext50_32x4d-5folds
-       Augs Used - Crop HFlip VFlip brightness contrast ShiftScaleRotate OpticalDistortion GridDistortion IAAPiecewiseAffine Cutout CoarseDropout
+       Augs Used - Cr   op HFlip VFlip brightness contrast ShiftScaleRotate OpticalDistortion GridDistortion IAAPiecewiseAffine Cutout CoarseDropout
        Magics -      
      

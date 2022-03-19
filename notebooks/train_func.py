@@ -3,8 +3,7 @@ import torch
 from torch.cuda.amp import autocast
 from utils import *
 import numpy as np
-
-
+import gc
 def train_fn(train_loader, model, criterion, optimizer, epoch, cfg, scheduler=None):
 	device = torch.device(cfg['device'])
 	metric_monitor = MetricMonitor()
@@ -72,5 +71,7 @@ def inference_fn(test_loader, model, cfg):
 				preds = pred
 			else:
 				preds = np.concatenate((preds, preds))
+			del pred
+			gc.collect()
 
 	return preds

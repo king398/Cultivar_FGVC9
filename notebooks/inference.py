@@ -10,7 +10,6 @@ from pathlib import Path
 import argparse
 import numpy as np
 import random
-from sklearn.model_selection import StratifiedKFold
 import glob
 
 from sklearn import preprocessing
@@ -49,15 +48,19 @@ def main(cfg):
 		model.to(device)
 		model.eval()
 		probablity = inference_fn(test_loader, model, cfg)
-		if probabilitys is None:
-			probabilitys = probablity
-		else:
-			np.concatenate((probablity, probabilitys))
 
-	mean_probablity = np.mean(probabilitys, axis=0)
-	preds = np.argmax(mean_probablity)
-	print(preds.shape)
-	print(preds[:10])
+		if probabilitys is None:
+			probabilitys = probablity / 5
+		else:
+			probabilitys += probablity / 5
+		del model
+		gc.collect()
+		torch.cuda.empty_cache()
+	preds = torch.argmax(torch.tensor(probabilitys), 1).numpy()
+	preds = label_encoder.inverse_transform(preds)
+	sub['cultivar'] = preds
+	sub.to_csv(cfg['submission_file'], index=False)
+
 
 
 if __name__ == '__main__' and '__file__' in globals():

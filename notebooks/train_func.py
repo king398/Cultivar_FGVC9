@@ -59,7 +59,7 @@ def inference_fn(test_loader, model, cfg):
 	device = torch.device(cfg['device'])
 	model.eval()
 	stream = tqdm(test_loader)
-	preds = []
+	preds = None
 	with torch.no_grad():
 		for i, images in enumerate(stream, start=1):
 			images = images.to(device, non_blocking=True)
@@ -68,6 +68,9 @@ def inference_fn(test_loader, model, cfg):
 				output = model(images)
 
 			pred = torch.softmax(output, 1).detach().cpu().numpy()
-			preds.append(pred)
+			if preds is None:
+				preds = pred
+			else:
+				preds = np.concatenate((preds, preds))
 
 	return preds

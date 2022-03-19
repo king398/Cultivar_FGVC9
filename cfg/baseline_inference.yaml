@@ -2,12 +2,12 @@ model: resnet34
 batch_size : 64
 image_size : 512
 seed : 42
-pretrained : true
+pretrained : false
 num_workers : 0
 pin_memory : true
-model_path :
+model_path : F:\Pycharm_projects\Cultivar_FGVC9\models\resnet34
 test_dir : F:\Pycharm_projects\Cultivar_FGVC9\data\test
-train_file_path : F:\Pycharm_projects\Cultivar_FGVC9\data\train_cultivar_mapping.csv
+train_file_path : F:\Pycharm_projects\Cultivar_FGVC9\data\train.csv
 
 sample_sub_file : F:\Pycharm_projects\Cultivar_FGVC9\data\sample_submission.csv
 submission_file : F:\Pycharm_projects\Cultivar_FGVC9\submissions\baseline_resnet34_submission.csv

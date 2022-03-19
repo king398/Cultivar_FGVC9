@@ -17,7 +17,7 @@ def train_fn(train_loader, model, criterion, optimizer, epoch, cfg, scheduler=No
 		target = target.to(device, non_blocking=True).long()
 
 		with autocast():
-			output = model(images).squeeze()
+			output = model(images)
 		loss = criterion(output, target)
 
 		accuracy = accuracy_score(output, target)
@@ -45,7 +45,7 @@ def validate_fn(val_loader, model, criterion, epoch, cfg):
 
 			target = target.to(device, non_blocking=True).long()
 			with autocast():
-				output = model(images).squeeze()
+				output = model(images)
 			loss = criterion(output, target)
 
 			accuracy = accuracy_score(output, target)

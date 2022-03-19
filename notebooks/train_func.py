@@ -5,7 +5,6 @@ from utils import *
 import numpy as np
 
 
-
 def train_fn(train_loader, model, criterion, optimizer, epoch, cfg, scheduler=None):
 	device = torch.device(cfg['device'])
 	metric_monitor = MetricMonitor()
@@ -54,4 +53,21 @@ def validate_fn(val_loader, model, criterion, epoch, cfg):
 			stream.set_description(f"Epoch: {epoch:02}. Valid. {metric_monitor}")
 			accuracy_list.append(accuracy)
 	return np.mean(accuracy_list)
-			
+
+
+def inference_fn(test_loader, model, cfg):
+	device = torch.device(cfg['device'])
+	model.eval()
+	stream = tqdm(test_loader)
+	preds = []
+	with torch.no_grad():
+		for i, images in enumerate(stream, start=1):
+			images = images.to(device, non_blocking=True)
+
+			with autocast():
+				output = model(images)
+
+			pred = torch.softmax(output, 1).argmax(dim=1).detach().cpu().numpy()
+			preds.append(pred)
+
+	return preds

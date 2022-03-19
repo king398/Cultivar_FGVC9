@@ -56,7 +56,7 @@ def main(cfg):
 		del model
 		gc.collect()
 		torch.cuda.empty_cache()
-	preds = torch.argmax(torch.tensor(probabilitys), 1).numpy()
+	preds = torch.argmax(probabilitys, 1).numpy()
 	preds = label_encoder.inverse_transform(preds)
 	sub['cultivar'] = preds
 	sub.to_csv(cfg['submission_file'], index=False)

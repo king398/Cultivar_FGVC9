@@ -66,11 +66,11 @@ def inference_fn(test_loader, model, cfg):
 			with autocast():
 				output = model(images)
 
-			pred = torch.softmax(output, 1).detach().cpu().numpy()
+			pred = torch.softmax(output, 1).detach().cpu()
 			if preds is None:
 				preds = pred
 			else:
-				preds = np.concatenate((preds, preds))
+				preds = torch.cat((preds, pred))
 			del pred
 			gc.collect()
 

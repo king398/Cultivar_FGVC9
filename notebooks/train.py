@@ -89,8 +89,8 @@ def main(cfg):
 					if best_model_name is not None:
 						os.remove(best_model_name)
 					torch.save(model.state_dict(),
-					           f"{cfg['model_dir']}/{cfg['model']}_fold{fold}_epoch{epoch}_accuracy_{round(accuracy, 4)}")
-					best_model_name = f"{cfg['model_dir']}/{cfg['model']}_fold{fold}_epoch{epoch}_accuracy_{round(accuracy, 4)}"
+					           f"{cfg['model_dir']}/{cfg['model']}_fold{fold}_epoch{epoch}_accuracy_{round(accuracy, 4)}.pth")
+					best_model_name = f"{cfg['model_dir']}/{cfg['model']}_fold{fold}_epoch{epoch}_accuracy_{round(accuracy, 4)}.pth"
 
 			gc.collect()
 			torch.cuda.empty_cache()

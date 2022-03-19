@@ -12,3 +12,4 @@ train_file_path : F:\Pycharm_projects\Cultivar_FGVC9\data\train_cultivar_mapping
 sample_sub_file : F:\Pycharm_projects\Cultivar_FGVC9\data\sample_submission.csv
 target_size : 100
 device : cuda
+in_channels: 3

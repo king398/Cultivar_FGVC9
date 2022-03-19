@@ -31,9 +31,8 @@ class Cultivar_data(Dataset):
 
 
 class Cultivar_data_inference(Dataset):
-	def __init__(self, image_path, cfg, transform=None):
+	def __init__(self, image_path, transform=None):
 		self.image_path = image_path
-		self.cfg = cfg
 		self.transform = transform
 
 	def __len__(self):

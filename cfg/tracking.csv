@@ -1,0 +1,2 @@
+﻿model name,Fold 0 score,Fold 1 score,Fold 2 score,Fold 3 score,Fold 4 score,Epochs,Avg CV,Lr,Optimizer,scheduler_name,Notes
+resnet34,0.852500021,0.796000004,0.795799971,0.860700011,0.836799979,5,0.828359997,2.00E-04,Adam,CosineAnnealingWarmRestarts,Just simple baseline;cv not accurcate just trying to see if things works

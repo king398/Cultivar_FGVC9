@@ -1,0 +1,2 @@
+model name	Fold 0 score	Fold 1 score	Fold 2 score	Fold 3 score	Fold 4 score	Fold 5 score	Avg CV	Lr	Optimizer	scheduler_name	Epochs	Notes
+resnet34	0.732						0.732			CosineAnnealingWarmRestarts		

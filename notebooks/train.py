@@ -36,7 +36,7 @@ def main(cfg):
 	seed_everything(cfg['seed'])
 	gc.enable()
 	device = return_device()
-	skf = StratifiedKFold(n_splits=cfg['n_fold'])
+	skf = StratifiedKFold(n_splits=cfg['n_fold'],random_state=cfg['seed'])
 	label_encoder = preprocessing.LabelEncoder()
 	train_df['cultivar'] = label_encoder.fit_transform(train_df['cultivar'])
 
@@ -89,8 +89,8 @@ def main(cfg):
 					if best_model_name is not None:
 						os.remove(best_model_name)
 					torch.save(model.state_dict(),
-					           f"{cfg['model_dir']}/{cfg['model']}_fold{fold}_epoch{epoch}_accuracy{accuracy}")
-					best_model_name = f"{cfg['model_dir']}/{cfg['model']}_fold{fold}_epoch{epoch}_accuracy{accuracy}"
+					           f"{cfg['model_dir']}/{cfg['model']}_fold{fold}_epoch{epoch}_accuracy_{round(accuracy, 4)}")
+					best_model_name = f"{cfg['model_dir']}/{cfg['model']}_fold{fold}_epoch{epoch}_accuracy_{round(accuracy, 4)}"
 
 			gc.collect()
 			torch.cuda.empty_cache()

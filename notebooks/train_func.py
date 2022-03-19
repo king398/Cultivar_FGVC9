@@ -67,7 +67,7 @@ def inference_fn(test_loader, model, cfg):
 			with autocast():
 				output = model(images)
 
-			pred = torch.softmax(output, 1).argmax(dim=1).detach().cpu().numpy()
+			pred = torch.softmax(output, 1).detach().cpu().numpy()
 			preds.append(pred)
 
 	return preds

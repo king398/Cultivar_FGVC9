@@ -29,7 +29,8 @@ from train_func import *
 
 def main(cfg):
 	train_df = pd.read_csv(cfg['train_file_path'])
-	predicted_labels = None
+	sub = pd.read_csv(cfg['sample_sub_file'])
+	probabilitys = None
 	seed_everything(cfg['seed'])
 	gc.enable()
 	device = return_device()
@@ -47,3 +48,22 @@ def main(cfg):
 		model.load_state_dict(torch.load(path))
 		model.to(device)
 		model.eval()
+		probablity = inference_fn(test_loader, model, cfg)
+		if probabilitys is None:
+			probabilitys = probablity
+		else:
+			np.concatenate((probablity, probabilitys))
+
+	mean_probablity = np.mean(probabilitys, axis=0)
+	preds = np.argmax(mean_probablity)
+	print(preds.shape)
+	print(preds[:10])
+
+
+if __name__ == '__main__' and '__file__' in globals():
+	parser = argparse.ArgumentParser(description='Baseline')
+	parser.add_argument("--file", type=Path)
+	args = parser.parse_args()
+	with open(str(args.file), "r") as stream:
+		cfg = yaml.safe_load(stream)
+	main(cfg)

@@ -3,7 +3,7 @@ batch_size : 64
 image_size : 512
 seed : 42
 pretrained : false
-num_workers : 0
+num_workers : 4
 pin_memory : true
 model_path : ../input/resnet34-baseline-fgvc
 test_dir : ../input/sorghum-id-fgvc-9/test

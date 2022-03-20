@@ -35,7 +35,7 @@ def main(cfg):
 	device = return_device()
 	label_encoder = preprocessing.LabelEncoder()
 	label_encoder.fit(train_df['cultivar'])
-	test_dataset = Cultivar_data_inference(image_path=glob.glob(f"{cfg['test_dir']}/*.png"),
+	test_dataset = Cultivar_data_inference(image_path=glob.glob(f"{cfg['test_dir']}/*.png")[:16],
 	                                       transform=get_test_transforms(cfg['image_size']))
 	test_loader = DataLoader(
 		test_dataset, batch_size=cfg['batch_size'], shuffle=False,
@@ -58,8 +58,10 @@ def main(cfg):
 		torch.cuda.empty_cache()
 	preds = torch.argmax(probabilitys, 1).numpy()
 	preds = label_encoder.inverse_transform(preds)
-	sub['cultivar'] = preds
-	sub.to_csv(cfg['submission_file'], index=False)
+	print(glob.glob(f"{cfg['test_dir']}/*.png")[:16])
+	print(preds)
+	#sub['cultivar'] = preds
+	#sub.to_csv(cfg['submission_file'], index=False)
 
 
 

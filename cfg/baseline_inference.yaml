@@ -6,7 +6,7 @@ pretrained : false
 num_workers : 4 
 pin_memory : true
 model_path : ../input/resnet34-baseline-fgvc
-test_dir : ../input/sorghum-id-fgvc-9/test
+test_dir : ../input/sorghum-id-fgvc-9/train_images
 train_file_path : ../input/resnet34-baseline-fgvc/train.csv
 
 sample_sub_file : ../input/sorghum-id-fgvc-9/sample_submission.csv

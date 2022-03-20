@@ -28,19 +28,19 @@ from train_func import *
 
 def main(cfg):
 	train_df = pd.read_csv(cfg['train_file_path'])
-	sub = pd.read_csv(cfg['sample_sub_file'])
 	probabilitys = None
 	seed_everything(cfg['seed'])
 	gc.enable()
 	device = return_device()
 	label_encoder = preprocessing.LabelEncoder()
-	label_encoder.fit(train_df['cultivar'])
-	test_dataset = Cultivar_data_inference(image_path=glob.glob(f"{cfg['test_dir']}/*.png")[:16],
+	train_df['cultivar'] = label_encoder.fit_transform(train_df['cultivar'])
+	test_dataset = Cultivar_data_inference(image_path=glob.glob(f"{cfg['test_dir']}/*.png"),
 	                                       transform=get_test_transforms(cfg['image_size']))
 	test_loader = DataLoader(
 		test_dataset, batch_size=cfg['batch_size'], shuffle=False,
 		num_workers=cfg['num_workers'], pin_memory=cfg['pin_memory']
 	)
+	ids = list(map(return_id,glob.glob(f"{cfg['test_dir']}/*.png"))) 
 
 	for path in glob.glob(f"{cfg['model_path']}/*.pth"):
 		model = BaseModel(cfg)
@@ -57,11 +57,8 @@ def main(cfg):
 		gc.collect()
 		torch.cuda.empty_cache()
 	preds = torch.argmax(probabilitys, 1).numpy()
-	preds = label_encoder.inverse_transform(preds)
-	print(glob.glob(f"{cfg['test_dir']}/*.png")[:16])
-	print(preds)
-	#sub['cultivar'] = preds
-	#sub.to_csv(cfg['submission_file'], index=False)
+	sub = pd.DataFrame({"id": ids, "cultivar": label_encoder.inverse_transform(preds)})
+	sub.to_csv(cfg['submission_file'], index=False)
 
 
 

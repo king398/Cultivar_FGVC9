@@ -1,16 +1,16 @@
 model: resnet34
-batch_size : 32
+batch_size : 16
 image_size : 512
 seed : 42
 pretrained : false
-num_workers : 4 
+num_workers : 0
 pin_memory : true
 model_path : ../input/resnet34-baseline-fgvc
-test_dir : ../input/sorghum-id-fgvc-9/train_images
+test_dir : ../input/sorghum-id-fgvc-9/test
 train_file_path : ../input/resnet34-baseline-fgvc/train.csv
 
 sample_sub_file : ../input/sorghum-id-fgvc-9/sample_submission.csv
-submission_file : ./baseline_resnet34_submission.csv
+submission_file : baseline_resnet34_submission.csv
 target_size : 100
 device : cuda
 in_channels: 3

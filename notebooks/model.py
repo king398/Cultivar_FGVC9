@@ -150,3 +150,19 @@ class BaseModel(nn.Module):
 
 
 		return output
+		
+class BaseModelEffNet(nn.Module):
+	def __init__(self, cfg):
+		super().__init__()
+		self.cfg = cfg
+		self.model = timm.create_model(self.cfg['model'], pretrained=self.cfg['pretrained'],
+		                               in_chans=self.cfg['in_channels'],
+		                               num_classes=100)
+		n_features = self.model.classfier.in_features
+		self.model.head = nn.Linear(n_features, cfg['target_size'])
+
+	def forward(self, x):
+		output = self.model(x)
+
+
+		return output

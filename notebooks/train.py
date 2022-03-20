@@ -75,7 +75,7 @@ def main(cfg):
 				num_workers=cfg['num_workers'], pin_memory=cfg['pin_memory']
 			)
 
-			model = BaseModel(cfg)
+			model = BaseModelEffNet(cfg)
 			model.to(device)
 			criterion = nn.CrossEntropyLoss()
 

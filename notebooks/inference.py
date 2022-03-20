@@ -70,3 +70,4 @@ if __name__ == '__main__' and '__file__' in globals():
 	with open(str(args.file), "r") as stream:
 		cfg = yaml.safe_load(stream)
 	main(cfg)
+

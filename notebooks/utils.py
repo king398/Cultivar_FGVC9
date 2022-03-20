@@ -55,8 +55,7 @@ def accuracy_score(output, labels):
 	return accuracy
 
 
-def return_id(string):
-	return string.split('/')[-1]
+
 
 class MetricMonitor:
 	def __init__(self, float_precision=3):

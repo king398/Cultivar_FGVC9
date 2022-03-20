@@ -41,7 +41,7 @@ def main(cfg):
 		test_dataset, batch_size=cfg['batch_size'], shuffle=False,
 		num_workers=cfg['num_workers'], pin_memory=cfg['pin_memory']
 	)
-	ids = list(map(return_id, paths)) 
+	ids = list(map(lambda string : string.split('/')[-1], paths)) 
 
 	for path in glob.glob(f"{cfg['model_path']}/*.pth"):
 		model = BaseModel(cfg)

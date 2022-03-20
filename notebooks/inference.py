@@ -34,7 +34,7 @@ def main(cfg):
 	gc.enable()
 	device = return_device()
 	label_encoder = preprocessing.LabelEncoder()
-	train_df['cultivar'] = label_encoder.fit_transform(train_df['cultivar'])
+	label_encoder.fit(train_df['cultivar'])
 	test_dataset = Cultivar_data_inference(image_path=glob.glob(f"{cfg['test_dir']}/*.png"),
 	                                       transform=get_test_transforms(cfg['image_size']))
 	test_loader = DataLoader(

@@ -9,6 +9,7 @@ pin_memory : true
 train_dir  : /content/train
 test_dir : /content/test
 train_file_path : /content/train.csv
+label_encoder_path : /content/classes.npy
 epochs: 5
 in_channels: 3
 folds:

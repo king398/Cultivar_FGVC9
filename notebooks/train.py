@@ -38,7 +38,7 @@ def main(cfg):
 	device = return_device()
 	skf = StratifiedKFold(n_splits=cfg['n_fold'], random_state=cfg['seed'], shuffle=True)
 	label_encoder = preprocessing.LabelEncoder()
-	label_encoder.classes_ = np.load(cfg['label_encoder_path'])
+	label_encoder.classes_ = np.load(cfg['label_encoder_path'],allow_pickle=True)
 	train_df['cultivar'] = label_encoder.fit_transform(train_df['cultivar'])
 
 	for fold, (trn_index, val_index) in enumerate(skf.split(train_df, train_df.cultivar)):

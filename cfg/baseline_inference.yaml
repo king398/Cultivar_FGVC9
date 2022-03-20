@@ -1,5 +1,5 @@
 model: resnet34
-batch_size : 16
+batch_size : 64
 image_size : 512
 seed : 42
 pretrained : false

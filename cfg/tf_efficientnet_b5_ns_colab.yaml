@@ -10,7 +10,7 @@ train_dir  : /content/train/train
 test_dir : /content/test
 train_file_path : /content/train.csv
 label_encoder_path : /content/classes.npy
-epochs: 5
+epochs: 10
 in_channels: 3
 folds:
       - 0
@@ -30,5 +30,5 @@ lr: 2e-4
 weight_decay: 1e-6
 target_size : 100
 device : cuda
-model_dir : /content/resnet34
+model_dir : /content/tf_efficientnet_b4_ns
 n_fold: 5

@@ -3,7 +3,7 @@ batch_size : 32
 image_size : 1024
 seed : 42
 pretrained : false
-num_workers : 4
+num_workers : 0
 pin_memory : true
 model_path : F:\Pycharm_projects\Cultivar_FGVC9\models\resnet34
 test_dir : F:\Pycharm_projects\Cultivar_FGVC9\data\test

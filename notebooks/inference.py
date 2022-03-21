@@ -42,6 +42,8 @@ def main(cfg):
 		num_workers=cfg['num_workers'], pin_memory=cfg['pin_memory']
 	)
 	ids = list(map(lambda string : string.split('/')[-1], paths)) 
+	ids = list(map(lambda string : string.split('.')[0], ids))
+	ids = list(map(lambda string : string + '.png', ids))
 
 	for path in glob.glob(f"{cfg['model_path']}/*.pth"):
 		model = BaseModel(cfg)

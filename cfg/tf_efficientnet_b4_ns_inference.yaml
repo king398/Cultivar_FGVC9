@@ -1,0 +1,18 @@
+model: tf_efficientnet_b4_ns
+batch_size : 16
+
+image_size : 512
+seed : 42
+pretrained : false
+num_workers : 0
+pin_memory : true
+model_path : ../input/resnet34-baseline-fgvc
+test_dir : F:\Pycharm_projects\Cultivar_FGVC9\data\test
+train_file_path : ../input/resnet34-baseline-fgvc/train.csv
+
+sample_sub_file : F:\Pycharm_projects\Cultivar_FGVC9\data\sample_submission.csv
+submission_file : F:\Pycharm_projects\Cultivar_FGVC9\submissions/baseline_tf_efficientnet_b4_ns_submission.csv
+target_size : 100
+device : cuda
+in_channels: 3
+n_folds : 5

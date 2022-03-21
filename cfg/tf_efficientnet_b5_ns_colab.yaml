@@ -6,7 +6,7 @@ pretrained : true
 num_workers : 4
 pin_memory : true
 
-train_dir  : /content/train/train
+train_dir  : /content/train
 test_dir : /content/test
 train_file_path : /content/train.csv
 label_encoder_path : /content/classes.npy

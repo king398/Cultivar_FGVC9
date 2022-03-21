@@ -58,11 +58,11 @@ def inference_fn(test_loader, model, cfg):
 	device = torch.device(cfg['device'])
 	model.eval()
 	stream = tqdm(test_loader)
-	preds = None
+	preds = None	
 	with torch.no_grad():
 		for i, images in enumerate(stream, start=1):
 			images = images.to(device, non_blocking=True)
-
+						
 			with autocast():
 				output = model(images)
 

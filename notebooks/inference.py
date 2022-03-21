@@ -34,19 +34,20 @@ def main(cfg):
 	device = return_device()
 	label_encoder = preprocessing.LabelEncoder()
 	train_df['cultivar'] = label_encoder.fit_transform(train_df['cultivar'])
-	paths  = glob.glob(f"{cfg['test_dir']}/*.png")
+	paths  = glob.glob(f"{cfg['test_dir']}/*.jpeg")
 	test_dataset = Cultivar_data_inference(image_path=paths,
 	                                       transform=get_test_transforms(cfg['image_size']))
+	
 	test_loader = DataLoader(
 		test_dataset, batch_size=cfg['batch_size'], shuffle=False,
 		num_workers=cfg['num_workers'], pin_memory=cfg['pin_memory']
 	)
-	ids = list(map(lambda string : string.split('/')[-1], paths)) 
+	ids = list(map(lambda string : string.split('\\')[-1], paths)) 
 	ids = list(map(lambda string : string.split('.')[0], ids))
 	ids = list(map(lambda string : string + '.png', ids))
 
 	for path in glob.glob(f"{cfg['model_path']}/*.pth"):
-		model = BaseModel(cfg)
+		model = BaseModelEffNet(cfg)
 		model.load_state_dict(torch.load(path))
 		model.to(device)
 		model.eval()

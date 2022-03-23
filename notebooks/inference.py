@@ -42,7 +42,7 @@ def main(cfg):
         test_dataset, batch_size=cfg['batch_size'], shuffle=False,
         num_workers=cfg['num_workers'], pin_memory=cfg['pin_memory']
     )
-    ids = list(map(lambda string: string.split('\\')[-1], paths))
+    ids = list(map(lambda string: string.split('/')[-1], paths))
     ids = list(map(lambda string: string.split('.')[0], ids))
     ids = list(map(lambda string: string + '.png', ids))
 

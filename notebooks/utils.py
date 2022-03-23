@@ -105,5 +105,5 @@ def get_scheduler(optimizer, scheduler_params):
 
 
 def return_filpath(name, folder):
-	path = os.path.join(folder, f'{name}.jpeg')
+	path = os.path.join(folder, f'{name}')
 	return path

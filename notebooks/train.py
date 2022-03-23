@@ -33,7 +33,7 @@ from train_func import *
 def main(cfg):
     train_df = pd.read_csv(cfg['train_file_path'])
 
-    train_df['file_path'] = train_df['file_path'].apply(lambda x: return_filpath(x,folder=cfg['train_folder']))
+    train_df['file_path'] = train_df['file_path'].apply(lambda x: return_filpath(x, folder=cfg['train_dir']))
     seed_everything(cfg['seed'])
     gc.enable()
     device = return_device()

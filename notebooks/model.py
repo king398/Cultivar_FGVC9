@@ -177,7 +177,7 @@ class TripletModel(nn.Module):
                                        num_classes=0, global_pool="")
         self.pool = GeM(p=self.cfg['pool_p'])
         self.attention = TripletAttention(kernel_size=self.cfg['triplet_kernel_size'])
-        self.head = nn.Linear(self.model.classifier.in_features, self.cfg['target_size'])
+        self.head = nn.Linear(self.model.num_features, self.cfg['target_size'])
 
     def forward(self, x):
         output = self.model(x)

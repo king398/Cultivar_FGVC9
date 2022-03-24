@@ -62,7 +62,7 @@ def main(cfg):
         gc.collect()
         torch.cuda.empty_cache()
     for path in glob.glob(f"{cfg['model_path2']}/*.pth"):
-        model = BaseModelEffNet(cfg)
+        model = BaseModel(cfg)
         model.load_state_dict(torch.load(path))
         model.to(device)
         model.eval()

@@ -1,4 +1,5 @@
 model: tf_efficientnet_b4_ns
+model_2 : resnet34
 batch_size : 12
 image_size : 512
 seed : 42

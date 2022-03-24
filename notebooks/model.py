@@ -9,6 +9,11 @@ import torch.nn.functional as F
 
 import math
 
+6
+import torch
+import torch.nn as nn
+import torch.nn.functional as F
+
 
 class BasicConv(nn.Module):
     def __init__(self, in_planes, out_planes, kernel_size, stride=1, padding=0, dilation=1, groups=1, relu=True,
@@ -160,6 +165,32 @@ class BaseModelEffNet(nn.Module):
         return output
 
 
+class SelectAdaptivePool2d(nn.Module):
+    """Selectable global pooling layer with dynamic input kernel size
+    """
+
+    def __init__(self, output_size=1, pool_type='fast', flatten=False):
+        super(SelectAdaptivePool2d, self).__init__()
+        self.pool_type = pool_type or ''  # convert other falsy values to empty string for consistent TS typing
+        self.flatten = nn.Flatten(1) if flatten else nn.Identity()
+
+        if pool_type == 'avg':
+            self.pool = nn.AdaptiveAvgPool2d(output_size)
+
+    def is_identity(self):
+        return not self.pool_type
+
+    def forward(self, x):
+        x = self.pool(x)
+        x = self.flatten(x)
+        return x
+
+    def __repr__(self):
+        return self.__class__.__name__ + ' (' \
+               + 'pool_type=' + self.pool_type \
+               + ', flatten=' + str(self.flatten) + ')'
+
+
 class TripletModel(nn.Module):
 
     def __init__(self, cfg):
@@ -168,7 +199,7 @@ class TripletModel(nn.Module):
         self.model = timm.create_model(self.cfg['model'], pretrained=self.cfg['pretrained'],
                                        in_chans=self.cfg['in_channels'],
                                        num_classes=0, global_pool="")
-        self.pool = GeM(p=self.cfg['pool_p'])
+        self.pool = SelectAdaptivePool2d(pool_type='avg',flatten=True)
         self.attention = TripletAttention(kernel_size=self.cfg['triplet_kernel_size'])
         self.head = nn.Linear(self.model.num_features, self.cfg['target_size'])
 
@@ -176,6 +207,5 @@ class TripletModel(nn.Module):
         output = self.model(x)
         output = self.attention(output)
         x = self.pool(output)
-        x = x.view(x.size(0), -1)
         output = self.head(x)
         return output

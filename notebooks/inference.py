@@ -62,6 +62,8 @@ def main(cfg):
         torch.cuda.empty_cache()
     preds = torch.argmax(probabilitys, 1).numpy()
     sub = pd.DataFrame({"filename": ids, "cultivar": label_encoder.inverse_transform(preds)})
+    probablitys = probabilitys.numpy()
+    np.save(cfg['probablity_file'], probablitys, allow_pickle=True)
     sub.to_csv(cfg['submission_file'], index=False)
 
 

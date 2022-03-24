@@ -50,7 +50,7 @@ class SpatialGate(nn.Module):
 
 
 class TripletAttention(nn.Module):
-    def __init__(self, gate_channels, reduction_ratio=16, pool_types=['avg', 'max'], no_spatial=False,
+    def __init__(self, no_spatial=False,
                  act_layer=nn.ReLU, kernel_size=7):
         super(TripletAttention, self).__init__()
         self.ChannelGateH = SpatialGate(act_layer=act_layer, kernel_size=kernel_size)
@@ -166,17 +166,23 @@ class BaseModelEffNet(nn.Module):
 
         return output
 
-class BaseModelInference(nn.Module):
+
+class TripletModel(nn.Module):
+
     def __init__(self, cfg):
         super().__init__()
         self.cfg = cfg
-        self.model = timm.create_model(self.cfg['model_2'], pretrained=self.cfg['pretrained'],
+        self.model = timm.create_model(self.cfg['model'], pretrained=self.cfg['pretrained'],
                                        in_chans=self.cfg['in_channels'],
-                                       num_classes=100)
-        n_features = self.model.fc.in_features
-        self.model.head = nn.Linear(n_features, cfg['target_size'])
+                                       num_classes=0, global_pool="")
+        self.pool = GeM(p=self.cfg['pool_p'])
+        self.attention = TripletAttention(kernel_size=self.cfg['triplet_kernel_size'])
+        self.head = nn.Linear(self.model.classifier.in_features, self.cfg['target_size'])
 
     def forward(self, x):
         output = self.model(x)
-
+        output = self.attention(output)
+        x = self.pool(output)
+        x = x.view(x.size(0), -1)
+        output = self.head(x)
         return output

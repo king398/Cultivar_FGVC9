@@ -1,1 +1,4 @@
 *.pth filter=lfs diff=lfs merge=lfs -text
+my_folder/** filter=lfs diff=lfs merge=lfs -text
+models/** filter=lfs diff=lfs merge=lfs -text
+/home/mithil/PycharmProjects/Cultivar_FGVC9/models/resnet34/resnet34_fold1_epoch3_accuracy_0.8607000112533569.pth filter=lfs diff=lfs merge=lfs -text

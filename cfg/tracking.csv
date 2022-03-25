@@ -1,1 +1,7 @@
 ﻿model name,Fold 0 score,Fold 1 score,Fold 2 score,Fold 3 score,Fold 4 score,Epochs,Avg CV,Lr,Optimizer,scheduler_name,Notes
+"tf_efficientnet_b4
+",0.963,0.960,0.972,"0.970
+",".970
+",10,0.907,0.0001,Adam,"CosineAnnealingWarmRestarts
+","Simple Baseline; nothing to be noted
+"

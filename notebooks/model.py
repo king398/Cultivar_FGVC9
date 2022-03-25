@@ -9,7 +9,7 @@ import torch.nn.functional as F
 
 import math
 
-6
+
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -199,7 +199,7 @@ class TripletModel(nn.Module):
         self.model = timm.create_model(self.cfg['model'], pretrained=self.cfg['pretrained'],
                                        in_chans=self.cfg['in_channels'],
                                        num_classes=0, global_pool="")
-        self.pool = SelectAdaptivePool2d(pool_type='avg',flatten=True)
+        self.pool = SelectAdaptivePool2d(pool_type='avg', flatten=True)
         self.attention = TripletAttention(kernel_size=self.cfg['triplet_kernel_size'])
         self.head = nn.Linear(self.model.num_features, self.cfg['target_size'])
 

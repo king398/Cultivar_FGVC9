@@ -4,6 +4,7 @@ from torch.cuda.amp import autocast
 from utils import *
 import numpy as np
 import gc
+from augmentations import *
 
 
 def train_fn(train_loader, model, criterion, optimizer, epoch, cfg, scheduler=None):
@@ -12,13 +13,22 @@ def train_fn(train_loader, model, criterion, optimizer, epoch, cfg, scheduler=No
     model.train()
     stream = tqdm(train_loader)
     for i, (images, target) in enumerate(stream, start=1):
-        images = images.to(device, non_blocking=True)
-
-        target = target.to(device, non_blocking=True).long()
+        if cfg['mixup']:
+            images, target_a, target_b, lam = mixup_data(images, target, cfg['mixup_alpha'])
+            images = images.to(device, non_blocking=True, dtype=torch.float)
+            target_a = target_a.to(device, dtype=torch.float)
+            target_b = target_b.to(device, dtype=torch.float)
+        else:
+            images.to(device, non_blocking=True, dtype=torch.float)
+            target = target.to(device).long()
 
         with autocast():
             output = model(images)
-        loss = criterion(output, target)
+
+        if cfg['mixup']:
+            loss = mixup_criterion(criterion, output, target_a, target_b, lam)
+        else:
+            loss = criterion(output, target)
 
         accuracy = accuracy_score(output, target)
 

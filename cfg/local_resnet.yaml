@@ -1,0 +1,39 @@
+model: resnext50d_32x4d
+batch_size: 24
+image_size: 512
+seed: 42
+pretrained: true
+num_workers: 4
+pin_memory: true
+
+train_dir: /home/mithil/PycharmProjects/Cultivar_FGVC9/data/archive/train/
+test_dir: /home/mithil/PycharmProjects/Cultivar_FGVC9/data/archive/test/
+train_file_path: /home/mithil/PycharmProjects/Cultivar_FGVC9/data/archive/train_cultivar_mapping.csv
+label_encoder_path: /home/mithil/PycharmProjects/Cultivar_FGVC9/data/archive/classes.npy
+epochs: 10
+in_channels: 3
+folds:
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
+
+
+scheduler_name: CosineAnnealingWarmRestarts
+T_0: 5
+T_max: 5
+T_mult: 1
+min_lr: 1e-7
+max_lr: 1e-4
+lr: 2e-4
+weight_decay: 1e-6
+target_size: 101
+device: cuda
+model_dir: /home/mithil/PycharmProjects/Cultivar_FGVC9/models/resnet
+n_fold: 5
+mixup: True
+mixup_alpha: 1.0
+triplet_kernel_size: 7
+pool_p: 3
+triplet: False

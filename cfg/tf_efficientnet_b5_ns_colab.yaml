@@ -33,6 +33,7 @@ device : cuda
 model_dir : /content/tf_efficientnet_b4_ns
 n_fold: 5
 mixup : True
+mixup_alpha : 1.0
 triplet_kernel_size : 7
 pool_p : 3
 triplet : False

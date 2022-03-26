@@ -16,14 +16,14 @@ def train_fn(train_loader, model, criterion, optimizer, epoch, cfg, scheduler=No
         if cfg['mixup']:
             images, target_a, target_b, lam = mixup_data(images, target, cfg['mixup_alpha'])
             images = images.to(device, non_blocking=True, dtype=torch.float)
-            target_a = target_a.to(device, dtype=torch.float)
-            target_b = target_b.to(device, dtype=torch.float)
+            target_a = target_a.to(device)
+            target_b = target_b.to(device)
         else:
             images.to(device, non_blocking=True, dtype=torch.float)
             target = target.to(device).long()
 
         with autocast():
-            output = model(images)
+            output = model(images).float()
 
         if cfg['mixup']:
             loss = mixup_criterion(criterion, output, target_a, target_b, lam)
@@ -55,7 +55,7 @@ def validate_fn(val_loader, model, criterion, epoch, cfg):
 
             target = target.to(device, non_blocking=True).long()
             with autocast():
-                output = model(images)
+                output = model(images).float()
             loss = criterion(output, target)
 
             accuracy = accuracy_score(output, target)

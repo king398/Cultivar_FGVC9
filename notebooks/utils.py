@@ -27,6 +27,8 @@ def return_device():
 
 
 def accuracy_score(output, labels):
+	output = output.detach().cpu()
+	labels = labels.detach().cpu()
 	output = torch.softmax(output, 1)
 	accuracy = (output.argmax(dim=1) == labels).float().mean()
 	accuracy = accuracy.detach().cpu().numpy()

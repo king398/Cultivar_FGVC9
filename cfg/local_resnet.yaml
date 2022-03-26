@@ -1,9 +1,9 @@
-model: resnext50d_32x4d
-batch_size: 24
+model: tf_efficientnet_b0_ns
+batch_size: 8
 image_size: 512
 seed: 42
 pretrained: true
-num_workers: 4
+num_workers: 20
 pin_memory: true
 
 train_dir: /home/mithil/PycharmProjects/Cultivar_FGVC9/data/archive/train/
@@ -30,7 +30,7 @@ lr: 2e-4
 weight_decay: 1e-6
 target_size: 101
 device: cuda
-model_dir: /home/mithil/PycharmProjects/Cultivar_FGVC9/models/resnet
+model_dir: /home/mithil/PycharmProjects/Cultivar_FGVC9/models/tf_efficienet_b0_mixup
 n_fold: 5
 mixup: True
 mixup_alpha: 1.0

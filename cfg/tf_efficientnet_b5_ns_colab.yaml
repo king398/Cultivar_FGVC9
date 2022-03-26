@@ -32,3 +32,7 @@ target_size : 100
 device : cuda
 model_dir : /content/tf_efficientnet_b4_ns
 n_fold: 5
+mixup : True
+triplet_kernel_size : 7
+pool_p : 3
+triplet : False

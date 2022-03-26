@@ -78,7 +78,7 @@ def main(cfg):
             if cfg['triplet']:
                 model = TripletModel(cfg)
             else:
-                model = BaseModelEffNet(cfg)
+                model = BaseModel(cfg)
 
             model.to(device)
             criterion = nn.CrossEntropyLoss()
@@ -117,4 +117,3 @@ if __name__ == '__main__' and '__file__' in globals():
 
     os.makedirs(cfg['model_dir'], exist_ok=True)
     main(cfg)
-import this

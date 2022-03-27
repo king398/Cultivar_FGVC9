@@ -5,3 +5,4 @@ model_path: /home/mithil/PycharmProjects/Cultivar_FGVC9/clip_models/RN50.pt
 label_encoder_path: /home/mithil/PycharmProjects/Cultivar_FGVC9/data/archive/classes.npy
 batch_size: 32
 num_workers: 0
+features_path: /home/mithil/PycharmProjects/Cultivar_FGVC9/clip_models/features_rn50.npy

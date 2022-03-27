@@ -52,9 +52,7 @@ def main(cfg):
     del train_loader
     del dataset
     del model
-    rapid_model = cuml.svm.SVC()
-    rapid_model.fit(features, train_labels)
-    print(accuracy_score(train_labels, rapid_model.predict(features)))
+    np.save(cfg['features_path'], features)
 
 
 if __name__ == '__main__' and '__file__' in globals():

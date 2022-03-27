@@ -5,13 +5,13 @@ seed : 42
 pretrained : false
 num_workers : 24
 pin_memory : true
-model_path : /home/mithil/PycharmProjects/Cultivar_FGVC9/models/tf_effficientnet_b4_ns_full_data-20220324T150346Z-001/tf_effficientnet_b4_ns_full_data
+model_path : /home/mithil/PycharmProjects/Cultivar_FGVC9/models/effnetb4mixup
 test_dir : /home/mithil/PycharmProjects/Cultivar_FGVC9/data/archive/test
 train_file_path : /home/mithil/PycharmProjects/Cultivar_FGVC9/data/archive/train_cultivar_mapping.csv
 
 sample_sub_file : /home/mithil/PycharmProjects/Cultivar_FGVC9/data/archive/sample_submission.csv
-submission_file : /home/mithil/PycharmProjects/Cultivar_FGVC9/submissions/tf_efficientnet_b4_ns_submission.csv
-probablity_file : /home/mithil/PycharmProjects/Cultivar_FGVC9/submissions/tf_efficientnet_b4_ns_probablity.npy
+submission_file : /home/mithil/PycharmProjects/Cultivar_FGVC9/submissions/tf_efficientnet_b4_ns_mixup_submission.csv
+probablity_file : /home/mithil/PycharmProjects/Cultivar_FGVC9/submissions/tf_efficientnet_b4_ns_mixup_probablity.npy
 target_size : 100
 device : cuda
 in_channels: 3

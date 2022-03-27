@@ -2,6 +2,7 @@ import torch
 from torch.utils.data import Dataset, DataLoader
 import numpy as np
 import cv2
+from PIL import Image
 
 
 class Cultivar_data(Dataset):
@@ -46,3 +47,16 @@ class Cultivar_data_inference(Dataset):
         if self.transform is not None:
             image = self.transform(image=image)['image']
         return image
+
+
+class Clip_data(Dataset):
+    def __init__(self, image_path, preprocess, device):
+        self.image_path = image_path
+        self.preprocess = preprocess
+        self.device = device
+
+    def __len__(self):
+        return len(self.image_path)
+
+    def __getitem__(self, item):
+        return self.preprocess(Image.open(self.image_path[item])).unsqueeze(0).to(self.device)

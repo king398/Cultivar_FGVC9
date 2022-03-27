@@ -1,4 +1,4 @@
-model: tf_efficientnet_b4_ns
+model: tf_efficientnet_b3_ns
 batch_size : 24
 image_size : 512
 seed : 42
@@ -10,7 +10,7 @@ train_dir  : /content/train/
 test_dir : /content/test
 train_file_path : /content/train_cultivar_mapping.csv
 label_encoder_path : /content/classes.npy
-epochs: 10
+epochs: 20
 in_channels: 3
 folds:
       - 0
@@ -25,12 +25,12 @@ T_0: 5
 T_max: 5
 T_mult: 1
 min_lr: 1e-7
-max_lr: 1e-4
-lr: 2e-4
+max_lr: 1e-3
+lr: 1e-4
 weight_decay: 1e-6
 target_size : 101
 device : cuda
-model_dir : /content/tf_efficientnet_b4_ns
+model_dir : /content/tf_efficientnet_b4_ns_mixup_betteraug
 n_fold: 5
 mixup : True
 mixup_alpha : 1.0

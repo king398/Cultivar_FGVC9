@@ -1,29 +1,47 @@
-import albumentations
+import albumentations as A
 from albumentations.pytorch.transforms import ToTensorV2
 import numpy as np
 import torch
 
 
 def get_train_transforms(DIM):
-    return albumentations.Compose(
+    return A.Compose(
         [
-            albumentations.Resize(DIM, DIM),
-            albumentations.Normalize(
-                mean=[0.3511794, 0.37462908, 0.2873578],
-                std=[0.20823358, 0.2117826, 0.16226698],
+            A.RandomResizedCrop(height=DIM, width=DIM),
+            A.Flip(p=0.5),
+            A.RandomRotate90(p=0.5),
+            A.ShiftScaleRotate(p=0.5),
+            A.HueSaturationValue(p=0.5),
+            A.OneOf([
+                A.RandomBrightnessContrast(p=0.5),
+                A.RandomGamma(p=0.5),
+            ], p=0.5),
+            A.OneOf([
+                A.Blur(p=0.1),
+                A.GaussianBlur(p=0.1),
+                A.MotionBlur(p=0.1),
+            ], p=0.1),
+            A.OneOf([
+                A.GaussNoise(p=0.1),
+                A.ISONoise(p=0.1),
+                A.GridDropout(ratio=0.5, p=0.2),
+                A.CoarseDropout(max_holes=16, min_holes=8, max_height=16, max_width=16, min_height=8, min_width=8,
+                                p=0.2)
+            ], p=0.2),
+            A.Normalize(
+                mean=[0.485, 0.456, 0.406],
+                std=[0.229, 0.224, 0.225],
             ),
-            albumentations.HorizontalFlip(),
-            albumentations.VerticalFlip(),
-            ToTensorV2(p=1.0)
+            ToTensorV2(),
         ]
     )
 
 
 def get_valid_transforms(DIM):
-    return albumentations.Compose(
+    return A.Compose(
         [
-            albumentations.Resize(DIM, DIM),
-            albumentations.Normalize(
+            A.Resize(DIM, DIM),
+            A.Normalize(
                 mean=[0.3511794, 0.37462908, 0.2873578],
                 std=[0.20823358, 0.2117826, 0.16226698],
             ),
@@ -33,10 +51,10 @@ def get_valid_transforms(DIM):
 
 
 def get_test_transforms(DIM):
-    return albumentations.Compose(
+    return A.Compose(
         [
-            albumentations.Resize(DIM, DIM),
-            albumentations.Normalize(
+            A.Resize(DIM, DIM),
+            A.Normalize(
                 mean=[0.3511794, 0.37462908, 0.2873578],
                 std=[0.20823358, 0.2117826, 0.16226698],
             ),

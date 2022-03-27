@@ -1,0 +1,7 @@
+train_file_path: /home/mithil/PycharmProjects/Cultivar_FGVC9/data/archive/train_cultivar_mapping.csv
+train_dir: /home/mithil/PycharmProjects/Cultivar_FGVC9/data/archive/train/
+seed: 42
+model_path: /home/mithil/PycharmProjects/Cultivar_FGVC9/clip_models/RN50.pt
+label_encoder_path: /home/mithil/PycharmProjects/Cultivar_FGVC9/data/archive/classes.npy
+batch_size: 32
+num_workers: 0

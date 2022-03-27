@@ -59,4 +59,4 @@ class Clip_data(Dataset):
         return len(self.image_path)
 
     def __getitem__(self, item):
-        return self.preprocess(Image.open(self.image_path[item])).unsqueeze(0).to(self.device)
+        return self.preprocess(Image.open(self.image_path[item]))

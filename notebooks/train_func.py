@@ -87,3 +87,23 @@ def inference_fn(test_loader, model, cfg):
             gc.collect()
 
     return preds
+
+
+def clip_extract(loader, model, device):
+    model.eval()
+    stream = tqdm(loader)
+    features = None
+    with torch.no_grad():
+        for i, images in enumerate(stream, start=1):
+            images = images.to(device, non_blocking=True)
+
+            with autocast():
+                output = model.encode_image(images)
+
+            if features is None:
+                features = output
+            else:
+                features = torch.cat((features, output))
+            del output
+            gc.collect()
+    return features.detach().cpu().numpy()

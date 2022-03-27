@@ -17,6 +17,20 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="/data/normalized/sample_submission.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/data/normalized/train_cultivar_mapping.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/submissions/baseline_resnet34_submission.csv">
           <value>
             <Attribute>

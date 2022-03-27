@@ -19,7 +19,7 @@ def train_fn(train_loader, model, criterion, optimizer, epoch, cfg, scheduler=No
             target_a = target_a.to(device)
             target_b = target_b.to(device)
         else:
-            images.to(device, non_blocking=True, dtype=torch.float)
+            images = images.to(device, non_blocking=True)
             target = target.to(device).long()
 
         with autocast():

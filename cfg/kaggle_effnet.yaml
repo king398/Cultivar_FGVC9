@@ -1,5 +1,5 @@
 model: tf_efficientnet_b4_ns
-batch_size : 24
+batch_size : 16
 image_size : 512
 seed : 42
 pretrained : true

@@ -107,3 +107,4 @@ def clip_extract(loader, model, device):
             del output
             gc.collect()
     return features.detach().cpu().numpy()
+def nn_train(loader)

@@ -4,5 +4,5 @@ seed: 42
 model_path: /home/mithil/PycharmProjects/Cultivar_FGVC9/clip_models/RN50x16.pt
 label_encoder_path: /home/mithil/PycharmProjects/Cultivar_FGVC9/data/archive/classes.npy
 batch_size: 32
-num_workers: 0
+num_workers: 10
 features_path: /home/mithil/PycharmProjects/Cultivar_FGVC9/clip_models/features_rn50.npy

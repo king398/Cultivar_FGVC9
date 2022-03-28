@@ -1,21 +1,31 @@
-import cuml
-import numpy as np
-import argparse
+from tqdm.auto import tqdm
+from collections import defaultdict
+import pandas as pd
+import os
+import random
+import gc
 import yaml
 from pathlib import Path
-import pandas as pd
-from utils import *
-import gc
+import argparse
+import numpy as np
+import random
+from sklearn.model_selection import StratifiedKFold
 from sklearn import preprocessing
-from sklearn.neural_network import MLPClassifier
-from sklearn.metrics import accuracy_score as acc
-import cupy
-from sklearn.model_selection import RandomizedSearchCV
-from sklearnex import patch_sklearn
+############# Deep learning Stuff #################
+import torch
+from torch.nn import functional as F
+from torch import nn
+import torch.optim as optim
+
+####### Function Created by me ###############
+from utils import *
+from augmentations import *
+from dataset import *
+from model import *
+from train_func import *
 
 
 def main(cfg):
-    patch_sklearn()
     train_df = pd.read_csv(cfg['train_file_path'])
 
     train_df['file_path'] = train_df['image'].apply(lambda x: return_filpath(x, folder=cfg['train_dir']))
@@ -28,18 +38,10 @@ def main(cfg):
     label_encoder.classes_ = np.load(cfg['label_encoder_path'], allow_pickle=True)
     train_df['cultivar'] = label_encoder.fit_transform(train_df['cultivar'])
     train_labels = train_df['cultivar']
-    param_grid = {
-        'hidden_layer_sizes': np.arange(100, 10000, step=100)
-
-    }
-
-    rapid_model = MLPClassifier(hidden_layer_sizes=(1000), verbose=True, max_iter=10000)
-
-    rapid_model.fit(features, train_labels)
-    x = rapid_model.predict(features)
-
-    print(acc(train_labels, x))
-
+    nn_dataset = NN_data(features=features, labels=train_labels)
+    loader = DataLoader(nn_dataset, batch_size=cfg['batch_size'], shuffle=True,
+                        num_workers=cfg['num_workers'])
+    for i in range(cfg['epochs']):
 
 if __name__ == '__main__' and '__file__' in globals():
     parser = argparse.ArgumentParser(description='Baseline')

@@ -15,3 +15,4 @@ target_size : 100
 device : cuda
 in_channels: 3
 n_folds : 5
+epochs : 100

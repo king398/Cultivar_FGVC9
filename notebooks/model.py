@@ -9,7 +9,6 @@ import torch.nn.functional as F
 
 import math
 
-
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -209,3 +208,20 @@ class TripletModel(nn.Module):
         x = self.pool(output)
         output = self.head(x)
         return output
+
+
+class NN_model(nn.Module):
+    def __init__(self):
+        super().__init__()
+        self.model = nn.Sequential(
+            nn.LazyLinear(512),
+            nn.SiLU(),
+            nn.LazyLinear(256),
+            nn.SiLU(),
+            nn.LazyLinear(128),
+            nn.SiLU(),
+            nn.LazyLinear(100),
+        )
+
+    def forward(self, x):
+        return self.model(x)

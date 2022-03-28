@@ -107,4 +107,25 @@ def clip_extract(loader, model, device):
             del output
             gc.collect()
     return features.detach().cpu().numpy()
-def nn_train(loader)
+
+
+def nn_train(model,loader,  device, criterion, optimizer, epoch, scheduler=None):
+    metric_monitor = MetricMonitor()
+    model.train()
+    stream = tqdm(loader)
+    for i, (features, labels) in enumerate(stream, start=1):
+        features = features.to(device, non_blocking=True)
+        labels = labels.to(device, non_blocking=True)
+        with autocast():
+            output = model(features).float()
+        loss = criterion(output, labels)
+        accuracy = accuracy_score(output, labels)
+        metric_monitor.update("Loss", loss.item())
+        metric_monitor.update("Accuracy", accuracy)
+        loss.backward()
+        optimizer.step()
+        if scheduler is not None:
+            scheduler.step()
+
+        optimizer.zero_grad()
+        stream.set_description(f"Epoch: {epoch:02}. Train. {metric_monitor}")

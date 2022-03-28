@@ -6,3 +6,4 @@ label_encoder_path: /home/mithil/PycharmProjects/Cultivar_FGVC9/data/archive/cla
 batch_size: 32
 num_workers: 10
 features_path: /home/mithil/PycharmProjects/Cultivar_FGVC9/clip_models/features_rn50.npy
+epochs : 10

@@ -41,7 +41,15 @@ def main(cfg):
     nn_dataset = NN_data(features=features, labels=train_labels)
     loader = DataLoader(nn_dataset, batch_size=cfg['batch_size'], shuffle=True,
                         num_workers=cfg['num_workers'])
+    model = NN_model()
+    model.to(device)
+    optimizer = optim.Adam(model.parameters())
+    loss = nn.CrossEntropyLoss()
     for i in range(cfg['epochs']):
+        nn_train(model, loader, device, loss, optimizer, i)
+    gc.collect()
+    torch.cuda.empty_cache()
+
 
 if __name__ == '__main__' and '__file__' in globals():
     parser = argparse.ArgumentParser(description='Baseline')

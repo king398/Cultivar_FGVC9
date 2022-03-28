@@ -11,6 +11,7 @@ import numpy as np
 import random
 from sklearn.model_selection import StratifiedKFold
 from sklearn import preprocessing
+from sklearn.model_selection import train_test_split
 ############# Deep learning Stuff #################
 import torch
 from torch.nn import functional as F
@@ -27,26 +28,34 @@ from train_func import *
 
 def main(cfg):
     train_df = pd.read_csv(cfg['train_file_path'])
-
+    label_encoder = preprocessing.LabelEncoder()
+    label_encoder.classes_ = np.load(cfg['label_encoder_path'], allow_pickle=True)
     train_df['file_path'] = train_df['image'].apply(lambda x: return_filpath(x, folder=cfg['train_dir']))
+    train_df['cultivar'] = label_encoder.fit_transform(train_df['cultivar'])
+
     seed_everything(cfg['seed'])
     gc.enable()
     device = return_device()
-    features = np.load(cfg['features_path'])
 
-    label_encoder = preprocessing.LabelEncoder()
-    label_encoder.classes_ = np.load(cfg['label_encoder_path'], allow_pickle=True)
-    train_df['cultivar'] = label_encoder.fit_transform(train_df['cultivar'])
-    train_labels = train_df['cultivar']
-    nn_dataset = NN_data(features=features, labels=train_labels)
-    loader = DataLoader(nn_dataset, batch_size=cfg['batch_size'], shuffle=True,
-                        num_workers=cfg['num_workers'])
+    features = np.load(cfg['features_path'])
+    features_train, features_valid, labels_train, labels_valid = train_test_split(features, train_df['cultivar'].values,
+                                                                                  test_size=0.2,
+                                                                                  random_state=cfg['seed'])
+    print(len(features_train))
+    nn_dataset_train = NN_data(features=features_train, labels=labels_train)
+    nn_dataset_valid = NN_data(features=features_valid, labels=labels_valid)
+    train_loader = DataLoader(nn_dataset_train, batch_size=cfg['batch_size'], shuffle=True,
+                              num_workers=cfg['num_workers'])
+    valid_loader = DataLoader(nn_dataset_valid, batch_size=cfg['batch_size'], shuffle=True,
+                              num_workers=cfg['num_workers'])
     model = NN_model()
+
     model.to(device)
     optimizer = optim.Adam(model.parameters())
     loss = nn.CrossEntropyLoss()
     for i in range(cfg['epochs']):
-        nn_train(model, loader, device, loss, optimizer, i)
+        nn_train(model, train_loader, device, loss, optimizer, i)
+        nn_valid(model, valid_loader, device, loss, i)
     gc.collect()
     torch.cuda.empty_cache()
 

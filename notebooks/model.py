@@ -214,6 +214,8 @@ class NN_model(nn.Module):
     def __init__(self):
         super().__init__()
         self.model = nn.Sequential(
+            nn.LazyLinear(1024),
+            nn.SiLU(),
             nn.LazyLinear(512),
             nn.SiLU(),
             nn.LazyLinear(256),

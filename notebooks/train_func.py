@@ -109,7 +109,7 @@ def clip_extract(loader, model, device):
     return features.detach().cpu().numpy()
 
 
-def nn_train(model,loader,  device, criterion, optimizer, epoch, scheduler=None):
+def nn_train(model, loader, device, criterion, optimizer, epoch, scheduler=None):
     metric_monitor = MetricMonitor()
     model.train()
     stream = tqdm(loader)
@@ -129,3 +129,21 @@ def nn_train(model,loader,  device, criterion, optimizer, epoch, scheduler=None)
 
         optimizer.zero_grad()
         stream.set_description(f"Epoch: {epoch:02}. Train. {metric_monitor}")
+
+
+def nn_valid(model, loader, device, criterion, epoch):
+    metric_monitor = MetricMonitor()
+    model.eval()
+    stream = tqdm(loader)
+    with torch.no_grad():
+        for i, (features, labels) in enumerate(stream, start=1):
+            features = features.to(device, non_blocking=True)
+            labels = labels.to(device, non_blocking=True)
+            with autocast():
+                output = model(features).float()
+            loss = criterion(output, labels)
+            accuracy = accuracy_score(output, labels)
+            metric_monitor.update("Loss", loss.item())
+            metric_monitor.update("Accuracy", accuracy)
+
+            stream.set_description(f"Epoch: {epoch:02}. Valid. {metric_monitor}")

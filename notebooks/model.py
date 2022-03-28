@@ -216,15 +216,20 @@ class NN_model(nn.Module):
         self.model = nn.Sequential(
             nn.LazyLinear(1024),
             nn.SiLU(),
+            nn.LazyBatchNorm1d(),
             nn.LazyLinear(512),
             nn.SiLU(),
+            nn.LazyBatchNorm1d(),
             nn.Dropout(0.2),
             nn.LazyLinear(256),
             nn.SiLU(),
+            nn.LazyBatchNorm1d(),
             nn.LazyLinear(128),
             nn.SiLU(),
             nn.Dropout(0.2),
+            nn.LazyBatchNorm1d(),
             nn.LazyLinear(100),
+
         )
 
     def forward(self, x):

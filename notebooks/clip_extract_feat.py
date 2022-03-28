@@ -39,8 +39,8 @@ def main(cfg):
     label_encoder = preprocessing.LabelEncoder()
     label_encoder.classes_ = np.load(cfg['label_encoder_path'], allow_pickle=True)
     train_df['cultivar'] = label_encoder.fit_transform(train_df['cultivar'])
-    train_path = train_df['file_path'][:100]
-    train_labels = train_df['cultivar'][:100]
+    train_path = train_df['file_path']
+    train_labels = train_df['cultivar']
     dataset = Clip_data(image_path=train_path, preprocess=preprocess, device=device)
     train_loader = DataLoader(dataset, batch_size=cfg['batch_size'], shuffle=True, num_workers=cfg['num_workers'],
                               pin_memory=True)

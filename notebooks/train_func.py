@@ -135,6 +135,7 @@ def nn_valid(model, loader, device, criterion, epoch):
     metric_monitor = MetricMonitor()
     model.eval()
     stream = tqdm(loader)
+    accuracy_list = []
     with torch.no_grad():
         for i, (features, labels) in enumerate(stream, start=1):
             features = features.to(device, non_blocking=True)
@@ -147,3 +148,5 @@ def nn_valid(model, loader, device, criterion, epoch):
             metric_monitor.update("Accuracy", accuracy)
 
             stream.set_description(f"Epoch: {epoch:02}. Valid. {metric_monitor}")
+            accuracy_list.append(accuracy)
+    return np.mean(accuracy_list)

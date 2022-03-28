@@ -53,9 +53,18 @@ def main(cfg):
     model.to(device)
     optimizer = optim.Adam(model.parameters())
     loss = nn.CrossEntropyLoss()
+    best_accuracy = - np.inf
+    best_model_name = None
     for i in range(cfg['epochs']):
         nn_train(model, train_loader, device, loss, optimizer, i)
-        nn_valid(model, valid_loader, device, loss, i)
+        acc = nn_valid(model, valid_loader, device, loss, i)
+        if acc > best_accuracy:
+            best_accuracy = acc
+            if best_model_name is not None:
+                os.remove(best_model_name)
+            torch.save(model.state_dict(),
+                       f"/home/mithil/PycharmProjects/Cultivar_FGVC9/models/nn/nn_{acc:.4f}_epoch_{i}.pth")
+            best_model_name = f"/home/mithil/PycharmProjects/Cultivar_FGVC9/models/nn/nn_{acc:.4f}_epoch_{i}.pth"
     gc.collect()
     torch.cuda.empty_cache()
 

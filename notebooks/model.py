@@ -218,10 +218,12 @@ class NN_model(nn.Module):
             nn.SiLU(),
             nn.LazyLinear(512),
             nn.SiLU(),
+            nn.Dropout(0.2),
             nn.LazyLinear(256),
             nn.SiLU(),
             nn.LazyLinear(128),
             nn.SiLU(),
+            nn.Dropout(0.2),
             nn.LazyLinear(100),
         )
 

@@ -3,17 +3,19 @@ import numpy as np
 import argparse
 import yaml
 from pathlib import Path
-import cuml
 import pandas as pd
 from utils import *
 import gc
 from sklearn import preprocessing
-from sklearn.svm import SVC
+from sklearn.neural_network import MLPClassifier
 from sklearn.metrics import accuracy_score as acc
 import cupy
+from sklearn.model_selection import RandomizedSearchCV
+from sklearnex import patch_sklearn
 
 
 def main(cfg):
+    patch_sklearn()
     train_df = pd.read_csv(cfg['train_file_path'])
 
     train_df['file_path'] = train_df['image'].apply(lambda x: return_filpath(x, folder=cfg['train_dir']))
@@ -23,15 +25,18 @@ def main(cfg):
     features = np.load(cfg['features_path'])
 
     label_encoder = preprocessing.LabelEncoder()
+    label_encoder.classes_ = np.load(cfg['label_encoder_path'], allow_pickle=True)
     train_df['cultivar'] = label_encoder.fit_transform(train_df['cultivar'])
     train_labels = train_df['cultivar']
-    print(max(train_labels))
-    rapid_model = cuml.svm.SVR(C=10, kernel='rbf', gamma=1)
+    param_grid = {
+        'hidden_layer_sizes': np.arange(100, 10000, step=100)
+
+    }
+
+    rapid_model = MLPClassifier(hidden_layer_sizes=(1000), verbose=True, max_iter=10000)
 
     rapid_model.fit(features, train_labels)
     x = rapid_model.predict(features)
-    x = cupy.clip(x, 0, 101)
-    print(x)
 
     print(acc(train_labels, x))
 

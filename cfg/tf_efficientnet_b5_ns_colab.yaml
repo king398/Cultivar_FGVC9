@@ -1,23 +1,23 @@
 model: tf_efficientnet_b3_ns
-batch_size : 24
-image_size : 512
-seed : 42
-pretrained : true
-num_workers : 4
-pin_memory : true
+batch_size: 24
+image_size: 512
+seed: 42
+pretrained: true
+num_workers: 4
+pin_memory: true
 
-train_dir  : /content/train/
-test_dir : /content/test
-train_file_path : /content/train_cultivar_mapping.csv
-label_encoder_path : /content/classes.npy
-epochs: 20
+train_dir: /content/train/
+test_dir: /content/test
+train_file_path: /content/train_cultivar_mapping.csv
+label_encoder_path: /content/classes.npy
+epochs: 30
 in_channels: 3
 folds:
-      - 0
-      - 1
-      - 2
-      - 3
-      - 4
+  - 0
+  - 1
+  - 2
+  - 3
+  - 4
 
 
 scheduler_name: CosineAnnealingWarmRestarts
@@ -28,12 +28,15 @@ min_lr: 1e-7
 max_lr: 1e-3
 lr: 1e-4
 weight_decay: 1e-6
-target_size : 101
-device : cuda
-model_dir : /content/tf_efficientnet_b4_ns_mixup_betteraug
+target_size: 101
+device: cuda
+model_dir: /content/tf_efficientnet_b4_ns_mixup_betteraug
 n_fold: 5
-mixup : True
-mixup_alpha : 1.0
-triplet_kernel_size : 7
-pool_p : 3
-triplet : False
+mixup: True
+mixup_alpha: 1.0
+triplet_kernel_size: 7
+pool_p: 3
+triplet: False
+pct_start: 0.2
+div_factor : 1.0e+3
+final_div_factor : 1.0e+3

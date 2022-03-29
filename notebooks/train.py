@@ -85,7 +85,7 @@ def main(cfg):
 
             optimizer = optim.Adam(model.parameters(), lr=float(cfg['lr']),
                                    )
-            scheduler = get_scheduler(optimizer, cfg)
+            scheduler = get_scheduler(optimizer, cfg, train_loader)
             for epoch in range(cfg['epochs']):
                 train_fn(train_loader, model, criterion, optimizer, epoch, cfg, scheduler)
                 accuracy = validate_fn(val_loader, model, criterion, epoch, cfg)

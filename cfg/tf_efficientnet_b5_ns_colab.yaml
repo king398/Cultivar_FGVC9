@@ -1,4 +1,4 @@
-model: tf_efficientnet_b4_ns
+model: tf_efficientnet_b3_ns
 batch_size: 24
 image_size: 512
 seed: 42
@@ -20,7 +20,7 @@ folds:
   - 4
 
 
-scheduler_name: OneCycleLR
+scheduler_name: CosineAnnealingWarmRestarts
 T_0: 5
 T_max: 5
 T_mult: 1
@@ -28,7 +28,7 @@ min_lr: 1e-7
 max_lr: 1e-3
 lr: 1e-4
 weight_decay: 1e-6
-target_size: 100
+target_size: 101
 device: cuda
 model_dir: /content/tf_efficientnet_b4_ns_mixup_betteraug
 n_fold: 5

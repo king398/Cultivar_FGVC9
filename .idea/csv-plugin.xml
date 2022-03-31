@@ -31,6 +31,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="/submissions/blend_submission_effnetb4_effnetb3miuxp_resnet34.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/submissions/blend_submission_effnetb4_fulldata_resnet34.csv">
           <value>
             <Attribute>
@@ -39,6 +46,13 @@
           </value>
         </entry>
         <entry key="/submissions/blend_submission_effnetb4_resnet34.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/submissions/tf_efficientnet_b3_ns_mixup_more_epoch_submission.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />

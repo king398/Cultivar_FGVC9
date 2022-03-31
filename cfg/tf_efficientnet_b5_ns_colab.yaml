@@ -28,7 +28,7 @@ min_lr: 1e-7
 max_lr: 1e-3
 lr: 1e-4
 weight_decay: 1e-6
-target_size: 10
+target_size: 100
 device: cuda
 model_dir: /content/tf_efficientnet_b4_ns_mixup_betteraug
 n_fold: 5

@@ -1,7 +1,9 @@
-﻿model name,Fold 0 score,Fold 1 score,Fold 2 score,Fold 3 score,Fold 4 score,Epochs,Avg CV,Lr,Optimizer,scheduler_name,Notes
+model name,Fold 0 score,Fold 1 score,Fold 2 score,Fold 3 score,Fold 4 score,Epochs,Avg CV,Lr,Optimizer,scheduler_name,Notes,Lb Score
 "tf_efficientnet_b4
-",0.963,0.960,0.972,"0.970
+",0.963,0.96,0.972,"0.970
 ",".970
 ",10,,0.0001,Adam,"CosineAnnealingWarmRestarts
 ","Simple Baseline; nothing to be noted
-"
+",
+tf_efficientnet_b3_ns,0.975,0.9754,0.9789,0.9808,0.9793,20,0.97788,0.0001,Adam,CosineAnnealingWarmRestarts,Mixup and 20 epochs,0.812
+tf_efficientnet_b3_ns_tta,,,,,,20,#DIV/0!,0.0001,Adam,CosineAnnealingWarmRestarts,Mixup and 20 epochs plus ten_crop_transform,0.845

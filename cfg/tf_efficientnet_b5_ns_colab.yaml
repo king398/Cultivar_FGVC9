@@ -1,5 +1,5 @@
-model: seresnext50_32x4d
-batch_size: 24
+model: tf_efficientnet_b5_ns
+batch_size: 12
 image_size: 512
 seed: 42
 pretrained: true
@@ -10,7 +10,7 @@ train_dir: /content/train/
 test_dir: /content/test
 train_file_path: /content/train_cultivar_mapping.csv
 label_encoder_path: /content/classes.npy
-epochs: 30
+epochs: 20
 in_channels: 3
 folds:
   - 0

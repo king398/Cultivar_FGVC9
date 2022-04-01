@@ -18,6 +18,7 @@ import torch
 from torch.nn import functional as F
 from torch import nn
 import torch.optim as optim
+import  ttach
 ####### Function Created by me ###############
 from utils import *
 from augmentations import *

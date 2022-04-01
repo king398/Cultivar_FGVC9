@@ -1,17 +1,17 @@
 model: tf_efficientnet_b3_ns
 batch_size: 16
-image_size: 512
+image_size: 1024
 seed: 42
-  pretrained: false
-num_workers: 20
+pretrained: false
+num_workers: 40
 pin_memory: true
 model_path: /home/mithil/PycharmProjects/Cultivar_FGVC9/models/effneb3_mixup_20
 test_dir: /home/mithil/PycharmProjects/Cultivar_FGVC9/data/archive/test
 train_file_path: /home/mithil/PycharmProjects/Cultivar_FGVC9/data/archive/train_cultivar_mapping.csv
 
 sample_sub_file: /home/mithil/PycharmProjects/Cultivar_FGVC9/data/archive/sample_submission.csv
-submission_file: /home/mithil/PycharmProjects/Cultivar_FGVC9/submissions/tf_efficientnet_b3_ns_mixup_more_epoch_submission.csv
-probablity_file: /home/mithil/PycharmProjects/Cultivar_FGVC9/submissions/tf_efficientnet_b3_ns_mixup_more_epoch_probablity.npy
+submission_file: /home/mithil/PycharmProjects/Cultivar_FGVC9/submissions/tf_efficientnet_b3_ns_mixup_more_epoch_tta_submission.csv
+probablity_file: /home/mithil/PycharmProjects/Cultivar_FGVC9/submissions/tf_efficientnet_b3_ns_mixup_more_epoch_tta_probablity.npy
 target_size: 100
 device: cuda
 in_channels: 3

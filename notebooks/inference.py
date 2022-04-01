@@ -1,27 +1,15 @@
 ######## Helper Functions #############
-from tqdm.auto import tqdm
-from collections import defaultdict
-import pandas as pd
-import os
-import random
-import gc
-import yaml
-from pathlib import Path
 import argparse
-import numpy as np
-import random
 import glob
+from pathlib import Path
 
-from sklearn import preprocessing
+import pandas as pd
 ############# Deep learning Stuff #################
-import torch
-from torch.nn import functional as F
-from torch import nn
-import torch.optim as optim
-import  ttach
+import ttach as tta
+import yaml
+from sklearn import preprocessing
+
 ####### Function Created by me ###############
-from utils import *
-from augmentations import *
 from dataset import *
 from model import *
 from train_func import *
@@ -50,6 +38,8 @@ def main(cfg):
     for path in glob.glob(f"{cfg['model_path']}/*.pth"):
         model = BaseModelEffNet(cfg)
         model.load_state_dict(torch.load(path))
+        model = tta.ClassificationTTAWrapper(model, tta.aliases.flip_transform())
+
         model.to(device)
         model.eval()
         probablity = inference_fn(test_loader, model, cfg)

@@ -1,0 +1,18 @@
+model: tf_efficientnet_b5_ns
+batch_size: 12
+image_size: 1024
+seed: 42
+pretrained: false
+num_workers: 4
+pin_memory: true
+model_path: /content/drive/MyDrive/models/efffnetb520epoch
+test_dir: /content/test
+train_file_path: /content/train_cultivar_mapping.csv
+
+sample_sub_file: /content/sample_submission.csv
+submission_file: tf_efficientnet_b5_ns_mixup_more_epoch_tta_submission.csv
+probablity_file: tf_efficientnet_b5_ns_mixup_more_epoch_tta_probablity.npy
+target_size: 100
+device: cuda
+in_channels: 3
+n_folds: 5

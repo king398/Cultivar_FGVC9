@@ -31,6 +31,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="/oof/tf_efficientnet_b3_ns_mixup_20.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/submissions/baseline_resnet34_submission.csv">
           <value>
             <Attribute>

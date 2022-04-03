@@ -16,7 +16,7 @@ import torch
 from torch.nn import functional as F
 from torch import nn
 import torch.optim as optim
-
+import ttach as tta
 ####### Function Created by me ###############
 from utils import *
 from augmentations import *
@@ -65,6 +65,8 @@ def main(cfg):
         model = BaseModelEffNet(cfg)
         model = model.to(device)
         model.load_state_dict(torch.load(path[0]))
+        model = tta.ClassificationTTAWrapper(model, tta.aliases.ten_crop_transform(512, 512), merge_mode='tsharpen')
+
         ids, target, preds, probablity, accuracy = oof_fn(val_loader, model, cfg)
         print(f"Fold: {fold} Accuracy: {accuracy}")
         oof_preds = np.concatenate([oof_preds, preds]) if oof_preds is not None else preds

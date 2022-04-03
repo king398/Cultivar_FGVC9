@@ -93,6 +93,37 @@ def inference_fn(test_loader, model, cfg):
     return preds
 
 
+def oof_fn(test_loader, model, cfg):
+    device = torch.device(cfg['device'])
+    model.eval()
+    stream = tqdm(test_loader)
+    ids = []
+    target = []
+    preds = None
+    probablitys = None
+    accuracy_list = []
+    with torch.no_grad():
+        for i, (images, label, id) in enumerate(stream, start=1):
+            ids.extend(id)
+            target.extend(label)
+            images = images.to(device, non_blocking=True)
+            label = label.to(device, non_blocking=True).long()
+            with autocast():
+                output = model(images).float()
+            probablity = torch.softmax(output, 1).detach().cpu()
+            if probablitys is None:
+                probablitys = probablity
+            else:
+                torch.cat((probablitys, probablity))
+            pred = torch.argmax(output, 1).detach().cpu()
+            if preds is None:
+                preds = pred
+            else:
+                preds = torch.cat((preds, pred))
+            accuracy_list.append(accuracy_score(output, label))
+    return ids, target, preds.detach().cpu().numpy(), probablitys.detach().cpu().numpy(), np.mean(accuracy_list)
+
+
 def clip_extract(loader, model, device):
     model.eval()
     stream = tqdm(loader)

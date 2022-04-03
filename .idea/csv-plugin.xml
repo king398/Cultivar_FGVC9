@@ -94,6 +94,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="/submissions/tta/tf_efficientnet_b5_ns_mixup_more_epoch_tta_submission.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
       </map>
     </option>
   </component>

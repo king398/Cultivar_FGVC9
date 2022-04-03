@@ -10,8 +10,8 @@ test_dir: /home/mithil/PycharmProjects/Cultivar_FGVC9/data/archive/test
 train_file_path: /home/mithil/PycharmProjects/Cultivar_FGVC9/data/archive/train_cultivar_mapping.csv
 
 sample_sub_file: /home/mithil/PycharmProjects/Cultivar_FGVC9/data/archive/sample_submission.csv
-submission_file: /home/mithil/PycharmProjects/Cultivar_FGVC9/submissions/tf_efficientnet_b5_ns_mixup_more_epoch_tta_submission.csv
-probablity_file: /home/mithil/PycharmProjects/Cultivar_FGVC9/submissions/tf_efficientnet_b5_ns_mixup_more_epoch_tta_probablity.npy
+submission_file: /home/mithil/PycharmProjects/Cultivar_FGVC9/submissions/tta/tf_efficientnet_b5_ns_mixup_more_epoch_tta_submission.csv
+probablity_file: /home/mithil/PycharmProjects/Cultivar_FGVC9/submissions/tta/tf_efficientnet_b5_ns_mixup_more_epoch_tta_probablity.npy
 target_size: 100
 device: cuda
 in_channels: 3

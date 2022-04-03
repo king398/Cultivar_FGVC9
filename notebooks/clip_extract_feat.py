@@ -1,29 +1,14 @@
-import cuml
-from tqdm.auto import tqdm
-from collections import defaultdict
-import pandas as pd
-import os
-import random
-import gc
-import yaml
-from pathlib import Path
 import argparse
-import numpy as np
-from sklearn import preprocessing
-from sklearn.metrics import accuracy_score
+from pathlib import Path
 
 ############# Deep learning Stuff #################
-import torch
-from torch.nn import functional as F
-from torch import nn
-import torch.optim as optim
 import clip
+import pandas as pd
+import yaml
+from sklearn import preprocessing
 
 ####### Function Created by me ###############
-from utils import *
-from augmentations import *
 from dataset import *
-from model import *
 from train_func import *
 
 

@@ -2,6 +2,13 @@ import albumentations as A
 from albumentations.pytorch.transforms import ToTensorV2
 import numpy as np
 import torch
+from ttach.base import Compose
+
+import ttach as tta
+
+
+def ten_crop_hflip_vflip_transform(crop_height, crop_width):
+    return Compose([tta.HorizontalFlip(), tta.VerticalFlip(), tta.FiveCrops(crop_height, crop_width)])
 
 
 def get_train_transforms(DIM):
@@ -17,6 +24,9 @@ def get_train_transforms(DIM):
                 mean=[0.485, 0.456, 0.406],
                 std=[0.229, 0.224, 0.225],
             ),
+            A.IAAPiecewiseAffine(),
+            A.Cutout(),
+
             ToTensorV2(),
         ]
     )

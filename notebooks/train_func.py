@@ -12,10 +12,11 @@ def train_fn(train_loader, model, criterion, optimizer, epoch, cfg, scheduler=No
     metric_monitor = MetricMonitor()
     model.train()
     stream = tqdm(train_loader)
-    if epoch < 5:
+    if epoch < 10:
         cfg['mixup'] = False
     else:
         cfg['mixup'] = True
+
     for i, (images, target) in enumerate(stream, start=1):
         if cfg['mixup']:
             images, target_a, target_b, lam = mixup_data(images, target, cfg['mixup_alpha'])

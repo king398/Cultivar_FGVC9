@@ -2,7 +2,7 @@ from torch import nn
 import torch
 
 
-class categorical_focal_loss_with_label_smoothing(nn.Module):
+class FocalLoss(nn.Module):
     """
     Implementation of Focal Loss from the paper in multiclass classification
     Formula:
@@ -21,7 +21,7 @@ class categorical_focal_loss_with_label_smoothing(nn.Module):
     """
 
     def __init__(self, alpha, gamma, ls, classes):
-        super(categorical_focal_loss_with_label_smoothing, self).__init__()
+        super(FocalLoss, self).__init__()
         self.alpha = torch.tensor(alpha)
         self.gamma = torch.tensor(gamma)
         self.ls = ls

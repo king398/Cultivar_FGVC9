@@ -1,5 +1,5 @@
-model: tf_efficientnet_b5_ns
-batch_size: 12
+model: tf_efficientnet_b3_ns
+batch_size: 16
 image_size: 1024
 seed: 42
 pretrained: false
@@ -13,7 +13,7 @@ in_channels: 3
 
 target_size: 100
 device: cuda
-model_dir: /home/mithil/PycharmProjects/Cultivar_FGVC9/models/effnetb5mixup_20
+model_dir: /home/mithil/PycharmProjects/Cultivar_FGVC9/models/effnetb3_moreaugs_30
 n_fold: 5
-oof_file_path: /home/mithil/PycharmProjects/Cultivar_FGVC9/oof/tf_efficientnet_b3_ns_mixup_20.csv
-oof_probablity_path : /home/mithil/PycharmProjects/Cultivar_FGVC9/oof/tf_efficientnet_b3_ns_mixup_20_probablity.npy
+oof_file_path: /home/mithil/PycharmProjects/Cultivar_FGVC9/oof/tf_efficientnet_b3_ns_mixup_30_moretta.csv
+oof_probablity_path: /home/mithil/PycharmProjects/Cultivar_FGVC9/oof/tf_efficientnet_b3_ns_mixup_30_moretta_probablity.npy

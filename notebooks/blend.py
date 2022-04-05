@@ -12,16 +12,20 @@ effnet = torch.tensor(
         '/home/mithil/PycharmProjects/Cultivar_FGVC9/submissions/tta/tf_efficientnet_b3_AUGS_ns_mixup_more_epoch_tta_probablity.npy'))
 
 effnet_big = torch.tensor(
-    np.load('/home/mithil/PycharmProjects/Cultivar_FGVC9/submissions/tf_efficientnet_b3_ns_mixup_more_epoch_tta_probablity.npy',
-            allow_pickle=True),
+    np.load(
+        '/home/mithil/PycharmProjects/Cultivar_FGVC9/submissions/tf_efficientnet_b3_ns_mixup_more_epoch_tta_probablity.npy',
+        allow_pickle=True),
 )
+efffnet_uwu = torch.tensor(
+    np.load('/home/mithil/PycharmProjects/Cultivar_FGVC9/submissions/tf_efficientnet_b4_ns_mixup_probablity.npy',
+            allow_pickle=True))
 ids = pd.read_csv(
     '/home/mithil/PycharmProjects/Cultivar_FGVC9/submissions/tf_efficientnet_b3_ns_mixup_more_epoch_tta_submission.csv')[
     'filename']
 
-probablity = effnet * 0.4 + effnet_big * 0.6
+probablity = effnet * 0.3 + effnet_big * 0.5 + efffnet_uwu * 0.2
 preds = torch.argmax(probablity, 1).numpy()
 sub = pd.DataFrame({"filename": ids, "cultivar": label_encoder.inverse_transform(preds)})
 sub.to_csv(
-    '/home/mithil/PycharmProjects/Cultivar_FGVC9/submissions/blend/Effnetb3_effnetb3_blend_tta_20_30_epoch.csv',
+    '/home/mithil/PycharmProjects/Cultivar_FGVC9/submissions/blend/Effnetb3_effnetb3_effnetb4_blend_tta_20_30_epoch.csv',
     index=False)

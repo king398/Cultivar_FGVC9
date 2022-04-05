@@ -52,6 +52,20 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="/submissions/blend/Effnetb3_effnetb3_blend_tta_20_30_epoch.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/submissions/blend/Effnetb5_effnetb3_blend_tta_20_epoch.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/submissions/blend_submission_effnetb4_effnetb3miuxp_resnet34.csv">
           <value>
             <Attribute>
@@ -95,6 +109,13 @@
           </value>
         </entry>
         <entry key="/submissions/tf_efficientnet_b4_ns_mixup_submission.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/submissions/tta/tf_efficientnet_b3_AUGS_ns_mixup_more_epoch_tta_submission.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />

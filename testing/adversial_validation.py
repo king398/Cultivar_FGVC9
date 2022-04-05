@@ -1,4 +1,4 @@
- import pandas as pd
+import pandas as pd
 import os
 from fastai.vision import *
 from fastai.vision.data import *
@@ -40,8 +40,8 @@ df = pd.DataFrame.from_dict(
     {'path': np.concatenate((train_path, test_path)), 'label': np.concatenate((train_labels, test_labels))})
 df = df.sample(frac=1).reset_index(drop=True)
 df.head()
-dls = ImageDataLoaders.from_df(df, bs=64,item_tfms = [Resize(512,Normalize.from_stats(*imagenet_stats))])
+dls = ImageDataLoaders.from_df(df, bs=64, item_tfms=[Resize(512, Normalize.from_stats(*imagenet_stats))])
 learn = cnn_learner(dls, models.resnet34, metrics=[AccumMetric(accuracy)])
 print(learn.loss_func)
-#lr = learn.lr_find()
-learn.fit_one_cycle(1,lr_max=0.0030199517495930195)
+# lr = learn.lr_find()
+learn.fit_one_cycle(1, lr_max=0.0030199517495930195)

@@ -78,7 +78,7 @@ def main(cfg):
             if cfg['triplet']:
                 model = TripletModel(cfg)
             else:
-                model = BaseModelEffNet(cfg)
+                model = BaseModel(cfg)
 
             model.to(device)
             criterion = nn.CrossEntropyLoss()

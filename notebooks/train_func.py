@@ -12,7 +12,7 @@ def train_fn(train_loader, model, criterion, optimizer, epoch, cfg, scheduler=No
     metric_monitor = MetricMonitor()
     model.train()
     stream = tqdm(train_loader)
-    if epoch < 10:
+    if epoch < 5:
         cfg['mixup'] = False
     else:
         cfg['mixup'] = True

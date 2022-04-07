@@ -26,7 +26,6 @@ def train_fn(train_loader, model, criterion, optimizer, epoch, cfg, scheduler=No
         elif cfg['cutmix']:
             images, target = cutmix(images, target, cfg['cutmix_alpha'])
             images = images.to(device, non_blocking=True, dtype=torch.float)
-            target = target.to(device)
         else:
             images = images.to(device, non_blocking=True)
             target = target.to(device).long()
@@ -37,7 +36,7 @@ def train_fn(train_loader, model, criterion, optimizer, epoch, cfg, scheduler=No
         if cfg['mixup']:
             loss = mixup_criterion(criterion, output, target_a, target_b, lam)
         if cfg['cutmix']:
-            loss = criterion(output, target[0]) * target[2] + criterion(output, target[1]) * (1. - target[2])
+            loss = criterion(output.detach().cpu(), target[0]) * target[2] + criterion(output, target[1]) * (1. - target[2])
         else:
             loss = criterion(output, target)
 

@@ -3,7 +3,7 @@ from albumentations.pytorch.transforms import ToTensorV2
 import numpy as np
 import torch
 from ttach.base import Compose
-
+import torch.nn.functional as F
 import ttach as tta
 
 
@@ -169,8 +169,8 @@ def snapmix(input, target, conf, model=None):
         target_b = target[rand_index]
 
         same_label = target == target_b
-        bbx1, bby1, bbx2, bby2 = utils.rand_bbox(input.size(), lam)
-        bbx1_1, bby1_1, bbx2_1, bby2_1 = utils.rand_bbox(input.size(), lam1)
+        bbx1, bby1, bbx2, bby2 = rand_bbox(input.size(), lam)
+        bbx1_1, bby1_1, bbx2_1, bby2_1 = rand_bbox(input.size(), lam1)
 
         area = (bby2 - bby1) * (bbx2 - bbx1)
         area1 = (bby2_1 - bby1_1) * (bbx2_1 - bbx1_1)

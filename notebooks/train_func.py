@@ -12,10 +12,10 @@ def train_fn(train_loader, model, criterion, optimizer, epoch, cfg, scheduler=No
     metric_monitor = MetricMonitor()
     model.train()
     stream = tqdm(train_loader)
-    # if epoch < 5:
-    # cfg['cutmix'] = False
-    # else:
-    # cfg['cutmix'] = True
+    if epoch < 5:
+        cfg['cutmix'] = False
+    else:
+        cfg['cutmix'] = True
 
     for i, (images, target) in enumerate(stream, start=1):
         if cfg['mixup']:

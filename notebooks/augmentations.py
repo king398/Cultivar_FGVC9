@@ -108,9 +108,8 @@ def cutmix(data, target, alpha):
     new_data[:, :, bby1:bby2, bbx1:bbx2] = data[indices, :, bby1:bby2, bbx1:bbx2]
     # adjust lambda to exactly match pixel ratio
     lam = 1 - ((bbx2 - bbx1) * (bby2 - bby1) / (data.size()[-1] * data.size()[-2]))
-    targets = (target, shuffled_target, lam)
 
-    return new_data, targets
+    return new_data, target, shuffled_target, lam
 
 
 def get_spm(input, target, conf, model):

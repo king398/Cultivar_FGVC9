@@ -13,9 +13,9 @@ def train_fn(train_loader, model, criterion, optimizer, epoch, cfg, scheduler=No
     model.train()
     stream = tqdm(train_loader)
     if epoch < 5:
-        cfg['mixup'] = False
+        cfg['cutmix'] = False
     else:
-        cfg['mixup'] = True
+        cfg['cutmix'] = True
 
     for i, (images, target) in enumerate(stream, start=1):
         if cfg['mixup']:
@@ -23,6 +23,10 @@ def train_fn(train_loader, model, criterion, optimizer, epoch, cfg, scheduler=No
             images = images.to(device, non_blocking=True, dtype=torch.float)
             target_a = target_a.to(device)
             target_b = target_b.to(device)
+        elif cfg['cutmix']:
+            images, target = cutmix(images, target, cfg['cutmix_alpha'])
+            images = images.to(device, non_blocking=True, dtype=torch.float)
+            target = target.to(device)
         else:
             images = images.to(device, non_blocking=True)
             target = target.to(device).long()

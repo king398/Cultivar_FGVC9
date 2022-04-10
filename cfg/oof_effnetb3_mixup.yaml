@@ -15,5 +15,5 @@ target_size: 100
 device: cuda
 model_dir: /home/mithil/PycharmProjects/Cultivar_FGVC9/models/effnetb3_moreaugs_30
 n_fold: 5
-oof_file_path: /home/mithil/PycharmProjects/Cultivar_FGVC9/oof/tf_efficientnet_b3_ns_mixup_30_moretta.csv
-oof_probablity_path: /home/mithil/PycharmProjects/Cultivar_FGVC9/oof/tf_efficientnet_b3_ns_mixup_30_moretta_probablity.npy
+oof_file_path: /home/mithil/PycharmProjects/Cultivar_FGVC9/oof/tf_efficientnet_b3_ns_mixup_30_more_more_tta.csv
+oof_probablity_path: /home/mithil/PycharmProjects/Cultivar_FGVC9/oof/tf_efficientnet_b3_ns_mixup_30_more_more_probablity.npy

@@ -1,20 +1,37 @@
-import timm
+import matplotlib.pyplot as plt
+from matplotlib import cm, colors
+from mpl_toolkits.mplot3d import Axes3D
+import numpy as np
 import torch
-
-from augmentations import *
-from model import *
-import cv2
-
-cfg = {"model": 'tf_efficientnet_b3_ns', 'pretrained': False, 'in_channels': 3, 'target_size': 100,
-       'snapmix_alpha': 1.0, 'image_size': 512, 'netname': 'effnet'}
+from torch.nn.functional import normalize
 
 
+def plot(embeds, labels, fig_path='./example.pdf'):
+    fig = plt.figure(figsize=(10, 10))
+    ax = fig.add_subplot(111, projection='3d')
+
+    # Create a sphere
+    r = 1
+    pi = np.pi
+    cos = np.cos
+    sin = np.sin
+    phi, theta = np.mgrid[0.0:pi:100j, 0.0:2.0 * pi:100j]
+    x = r * sin(phi) * cos(theta)
+    y = r * sin(phi) * sin(theta)
+    z = r * cos(phi)
+    ax.plot_surface(
+        x, y, z, rstride=1, cstride=1, color='w', alpha=0.3, linewidth=0)
+    ax.scatter(embeds[:, 0], embeds[:, 1], embeds[:, 2], c=labels, s=20)
+
+    ax.set_xlim([-1, 1])
+    ax.set_ylim([-1, 1])
+    ax.set_zlim([-1, 1])
+    plt.tight_layout()
+    plt.show()
 
 
-
-image = cv2.imread('/home/mithil/PycharmProjects/Cultivar_FGVC9/data/archive/train/2017-06-12__14-52-59-958.jpeg')
-image = get_train_transforms(512)(image=image)['image']
-image = image.unsqueeze(0)
-model = BaseModelEffNet(cfg)
-x = snapmix(image, torch.tensor(7), conf=cfg, model=model)
-print(x)
+data = list(range(100))
+x = torch.rand((10000, 512))
+plot(np.array(x), np.random.choice(data, 10000))
+print(torch.max(x))
+print(torch.min(x))

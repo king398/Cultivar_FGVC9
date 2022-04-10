@@ -118,9 +118,9 @@ def get_spm(input, target, conf, model):
     with torch.no_grad():
         output, fms, _ = model(input)
         if 'inception' in conf['netname']:
-            clsw = model.model.fc
+            clsw = model.backbone.fc
         else:
-            clsw = model.model.classifier
+            clsw = model.backbone.classifier
         weight = clsw.weight.data
         bias = clsw.bias.data
         weight = weight.view(weight.size(0), weight.size(1), 1, 1)
@@ -129,6 +129,7 @@ def get_spm(input, target, conf, model):
         clslogit = F.softmax(clsw.forward(poolfea))
         logitlist = []
         for i in range(bs):
+            print(clslogit)
             logitlist.append(clslogit[i, target[i]])
         clslogit = torch.stack(logitlist)
 

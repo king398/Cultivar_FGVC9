@@ -1,14 +1,7 @@
-import timm
-import torch.nn as nn
-import torch.nn.functional as F
-import torch.optim as optim
-
-import torch
-import torch.nn as nn
-import torch.nn.functional as F
-
 import math
+from typing import Tuple, Optional
 
+import timm
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
@@ -162,7 +155,6 @@ class BaseModelEffNet(nn.Module):
         self.model = timm.create_model(self.cfg['model'], pretrained=self.cfg['pretrained'],
                                        in_chans=self.cfg['in_channels'],
                                        num_classes=100)
-        self.model = self.model.apply(self.model)
         n_features = self.model.classifier.in_features
         self.model.head = nn.Linear(n_features, cfg['target_size'])
 
@@ -196,6 +188,35 @@ class SelectAdaptivePool2d(nn.Module):
         return self.__class__.__name__ + ' (' \
                + 'pool_type=' + self.pool_type \
                + ', flatten=' + str(self.flatten) + ')'
+
+
+def _calc_same_pad(i: int, k: int, s: int, d: int):
+    return max((-(i // -s) - 1) * s + (k - 1) * d + 1 - i, 0)
+
+
+def conv2d_same(
+        x, weight: torch.Tensor, bias: Optional[torch.Tensor] = None, stride: Tuple[int, int] = (1, 1),
+        padding: Tuple[int, int] = (0, 0), dilation: Tuple[int, int] = (1, 1), groups: int = 1):
+    ih, iw = x.size()[-2:]
+    kh, kw = weight.size()[-2:]
+    pad_h = _calc_same_pad(ih, kh, stride[0], dilation[0])
+    pad_w = _calc_same_pad(iw, kw, stride[1], dilation[1])
+    x = F.pad(x, [pad_w // 2, pad_w - pad_w // 2, pad_h // 2, pad_h - pad_h // 2])
+    return F.conv2d(x, weight, bias, stride, (0, 0), dilation, groups)
+
+
+class Conv2dSame(nn.Conv2d):
+    """ Tensorflow like 'SAME' convolution wrapper for 2D convolutions
+    """
+
+    # pylint: disable=unused-argument
+    def __init__(self, in_channels, out_channels, kernel_size, stride=1,
+                 padding=0, dilation=1, groups=1, bias=True):
+        super(Conv2dSame, self).__init__(
+            in_channels, out_channels, kernel_size, stride, 0, dilation, groups, bias)
+
+    def forward(self, x):
+        return conv2d_same(x, self.weight, self.bias, self.stride, self.padding, self.dilation, self.groups)
 
 
 class TripletModel(nn.Module):

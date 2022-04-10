@@ -24,6 +24,7 @@ from augmentations import *
 from dataset import *
 from model import *
 from train_func import *
+from loss import *
 
 
 # Passing Argument to get filepath to load our file which in our case is a yaml file
@@ -81,7 +82,7 @@ def main(cfg):
                 model = BaseModelEffNet(cfg)
 
             model.to(device)
-            criterion = nn.CrossEntropyLoss()
+            criterion = FocalLoss(alpha=0.25, gamma=2, ls=0.1, classes=100)
 
             optimizer = optim.Adam(model.parameters(), lr=float(cfg['lr']),
                                    )

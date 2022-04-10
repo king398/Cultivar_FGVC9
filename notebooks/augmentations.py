@@ -113,14 +113,14 @@ def cutmix(data, target, alpha):
 
 
 def get_spm(input, target, conf, model):
-    imgsize = (conf.cropsize, conf.cropsize)
+    imgsize = (conf['image_size'], conf['image_size'])
     bs = input.size(0)
     with torch.no_grad():
         output, fms, _ = model(input)
-        if 'inception' in conf.netname:
-            clsw = model.module.fc
+        if 'inception' in conf['netname']:
+            clsw = model.model.fc
         else:
-            clsw = model.module.classifier
+            clsw = model.model.classifier
         weight = clsw.weight.data
         bias = clsw.bias.data
         weight = weight.view(weight.size(0), weight.size(1), 1, 1)
@@ -159,11 +159,11 @@ def snapmix(input, target, conf, model=None):
     lam_b = 1 - lam_a
     target_b = target.clone()
 
-    if r < conf.prob:
+    if r < conf['snapmix_alpha']:
         wfmaps, _ = get_spm(input, target, conf, model)
         bs = input.size(0)
-        lam = np.random.beta(conf.beta, conf.beta)
-        lam1 = np.random.beta(conf.beta, conf.beta)
+        lam = np.random.beta(conf['snapmix_alpha'], conf['snapmix_alpha'])
+        lam1 = np.random.beta(conf['snapmix_alpha'], conf['snapmix_alpha'])
         rand_index = torch.randperm(bs).cuda()
         wfmaps_b = wfmaps[rand_index, :, :]
         target_b = target[rand_index]

@@ -148,13 +148,21 @@ class BaseModel(nn.Module):
         return output
 
 
+def set_batchnorm_eval(m):
+    classname = m.__class__.__name__
+    if classname.find('BatchNorm') != -1:
+        m.eval()
+
+
 class BaseModelEffNet(nn.Module):
+
     def __init__(self, cfg):
         super().__init__()
         self.cfg = cfg
         self.model = timm.create_model(self.cfg['model'], pretrained=self.cfg['pretrained'],
                                        in_chans=self.cfg['in_channels'],
                                        num_classes=100)
+        self.model = self.model.apply(self.model)
         n_features = self.model.classifier.in_features
         self.model.head = nn.Linear(n_features, cfg['target_size'])
 
@@ -215,7 +223,7 @@ class NN_model(nn.Module):
         super().__init__()
         self.model = nn.Sequential(
 
-            nn.LazyLinear(100)  ,
+            nn.LazyLinear(100),
 
         )
 

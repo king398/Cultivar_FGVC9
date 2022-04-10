@@ -38,7 +38,7 @@ def main(cfg):
     for path in glob.glob(f"{cfg['model_path']}/*.pth"):
         model = BaseModelEffNet(cfg)
         model.load_state_dict(torch.load(path))
-        model = tta.ClassificationTTAWrapper(model, ten_crop_hflip_vflip_transform(512, 512))
+        model = tta.ClassificationTTAWrapper(model, tta.aliases.ten_crop_transform(512, 512))
 
         model.to(device)
         model.eval()

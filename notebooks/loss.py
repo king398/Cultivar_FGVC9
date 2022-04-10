@@ -47,3 +47,14 @@ class FocalLoss(nn.Module):
         # Sum the losses in mini_batch
         loss = torch.sum(loss, dim=1)
         return loss
+
+
+class SnapMixLoss(nn.Module):
+    def __init__(self):
+        super().__init__()
+
+    def forward(self, criterion, outputs, ya, yb, lam_a, lam_b):
+        loss_a = criterion(outputs, ya)
+        loss_b = criterion(outputs, yb)
+        loss = torch.mean(loss_a * lam_a + loss_b * lam_b)
+        return loss

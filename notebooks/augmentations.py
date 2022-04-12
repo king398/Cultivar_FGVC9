@@ -112,15 +112,12 @@ def cutmix(data, target, alpha):
     return new_data, target, shuffled_target, lam
 
 
-def get_spm(input, target, conf, model):
-    imgsize = (conf['image_size'], conf['image_size'])
+def get_spm(input, target, model):
+    imgsize = (512, 512)
     bs = input.size(0)
     with torch.no_grad():
-        output, fms, _ = model(input)
-        if 'inception' in conf['netname']:
-            clsw = model.backbone.fc
-        else:
-            clsw = model.backbone.classifier
+        output, fms = model(input)
+        clsw = model.classifier
         weight = clsw.weight.data
         bias = clsw.bias.data
         weight = weight.view(weight.size(0), weight.size(1), 1, 1)
@@ -129,7 +126,6 @@ def get_spm(input, target, conf, model):
         clslogit = F.softmax(clsw.forward(poolfea))
         logitlist = []
         for i in range(bs):
-            print(clslogit)
             logitlist.append(clslogit[i, target[i]])
         clslogit = torch.stack(logitlist)
 
@@ -154,17 +150,17 @@ def get_spm(input, target, conf, model):
     return outmaps, clslogit
 
 
-def snapmix(input, target, conf, model=None):
+def snapmix(input, target, alpha, model=None):
     r = np.random.rand(1)
     lam_a = torch.ones(input.size(0))
     lam_b = 1 - lam_a
     target_b = target.clone()
 
-    if r < conf['snapmix_alpha']:
-        wfmaps, _ = get_spm(input, target, conf, model)
+    if True:
+        wfmaps, _ = get_spm(input, target, model)
         bs = input.size(0)
-        lam = np.random.beta(conf['snapmix_alpha'], conf['snapmix_alpha'])
-        lam1 = np.random.beta(conf['snapmix_alpha'], conf['snapmix_alpha'])
+        lam = np.random.beta(alpha, alpha)
+        lam1 = np.random.beta(alpha, alpha)
         rand_index = torch.randperm(bs).cuda()
         wfmaps_b = wfmaps[rand_index, :, :]
         target_b = target[rand_index]

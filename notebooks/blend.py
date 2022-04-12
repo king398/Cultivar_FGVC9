@@ -21,7 +21,7 @@ ids = pd.read_csv(
     '/home/mithil/PycharmProjects/Cultivar_FGVC9/submissions/tf_efficientnet_b3_ns_mixup_more_epoch_tta_submission.csv')[
     'filename']
 
-probablity = effnet * 0.3 + effnet_big * 0.7
+probablity = effnet * 0.2    + effnet_big * 0.8
 preds = torch.argmax(probablity, 1).numpy()
 sub = pd.DataFrame({"filename": ids, "cultivar": label_encoder.inverse_transform(preds)})
 sub.to_csv(

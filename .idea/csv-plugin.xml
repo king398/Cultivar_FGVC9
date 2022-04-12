@@ -31,7 +31,28 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="/oof/effnetb3_cutmix_30_epoch_tta_oof.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/oof/tf_efficientnet_b3_ns_mixup_20.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/oof/tf_efficientnet_b3_ns_mixup_30.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/oof/tf_efficientnet_b3_ns_mixup_30_moretta.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />
@@ -59,7 +80,21 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="/submissions/blend/Effnetb3_effnetb3_effnetb4_blend_tta_20_30_epoch.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/submissions/blend/Effnetb5_effnetb3_blend_tta_20_epoch.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/submissions/blend/tf_efficientnet_b3_ns_mixup_more_epoch_tta_submission_weights_0_3_07.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />
@@ -116,6 +151,13 @@
           </value>
         </entry>
         <entry key="/submissions/tta/tf_efficientnet_b3_AUGS_ns_mixup_more_epoch_tta_submission.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/submissions/tta/tf_efficientnet_b3_ns_cutmix_submission.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />

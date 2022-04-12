@@ -5,7 +5,7 @@ import pandas as pd
 import yaml
 from sklearn import preprocessing
 from sklearn.model_selection import train_test_split
-
+from torch import optim
 ####### Function Created by me ###############
 from dataset import *
 from model import *

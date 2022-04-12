@@ -1,30 +1,18 @@
-######## Helper Functions #############
-from tqdm.auto import tqdm
-from collections import defaultdict
-import pandas as pd
-import os
-import random
-import gc
-import yaml
-from pathlib import Path
+# Helper Functions
 import argparse
-import numpy as np
-import random
-from sklearn.model_selection import StratifiedKFold
-from sklearn import preprocessing
-############# Deep learning Stuff #################
-import torch
-from torch.nn import functional as F
-from torch import nn
-import torch.optim as optim
+from pathlib import Path
 
-####### Function Created by me ###############
-from utils import *
-from augmentations import *
+import pandas as pd
+# Deep learning Stuff
+import torch.optim as optim
+import yaml
+from sklearn import preprocessing
+from sklearn.model_selection import StratifiedKFold
+
+# Function Created by me
 from dataset import *
 from model import *
 from train_func import *
-from loss import *
 
 
 # Passing Argument to get filepath to load our file which in our case is a yaml file
@@ -82,7 +70,7 @@ def main(cfg):
                 model = BaseModelEffNet(cfg)
 
             model.to(device)
-            criterion = FocalLoss(alpha=0.25, gamma=2, ls=0.1, classes=100)
+            criterion = nn.CrossEntropyLoss()
 
             optimizer = optim.Adam(model.parameters(), lr=float(cfg['lr']),
                                    )

@@ -55,7 +55,7 @@ def main(cfg):
         model = BaseModelEffNet(cfg)
         model = model.to(device)
         model.load_state_dict(torch.load(path[0]))
-        model = tta.ClassificationTTAWrapper(model, ten_crop_hflip_vflip_transform(512, 512))
+        model = tta.ClassificationTTAWrapper(model, tta.aliases.ten_crop_transform(512, 512))
 
         ids, target, preds, probablity, accuracy = oof_fn(val_loader, model, cfg)
         print(f"Fold: {fold} Accuracy: {accuracy}")

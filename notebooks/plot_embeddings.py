@@ -30,8 +30,8 @@ def plot(embeds, labels, fig_path='./example.pdf'):
     plt.show()
 
 
+x = np.load(
+    '/home/mithil/PycharmProjects/Cultivar_FGVC9/submissions/tf_efficientnet_b3_ns_mixup_more_epoch_probablity.npy')
 data = list(range(100))
-x = torch.rand((10000, 512))
-plot(np.array(x), np.random.choice(data, 10000))
-print(torch.max(x))
-print(torch.min(x))
+
+plot(np.array(x), np.random.choice(data, len(x)))

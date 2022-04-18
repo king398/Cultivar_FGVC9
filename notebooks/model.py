@@ -252,13 +252,12 @@ class NN_model(nn.Module):
         return self.model(x)
 
 
-class Snapmix_net(nn.Module):
+class Snapmix_net_effnet(nn.Module):
     def __init__(self, cfg):
         super().__init__()
         self.cfg = cfg
         backbone = timm.create_model(self.cfg['model'], pretrained=self.cfg['pretrained'],
-                                     in_chans=self.cfg['in_channels'],
-                                     num_classes=100)
+                                     in_chans=self.cfg['in_channels'])
         n_features = backbone.classifier.in_features
         self.backbone = nn.Sequential(*backbone.children())[:-2]
         self.classifier = nn.Linear(n_features, cfg['target_size'])

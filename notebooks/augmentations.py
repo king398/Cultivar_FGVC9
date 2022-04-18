@@ -123,7 +123,7 @@ def get_spm(input, target, model):
         weight = weight.view(weight.size(0), weight.size(1), 1, 1)
         fms = F.relu(fms)
         poolfea = F.adaptive_avg_pool2d(fms, (1, 1)).squeeze()
-        clslogit = F.softmax(clsw.forward(poolfea))
+        clslogit = F.softmax(clsw.forward(poolfea), 1)
         logitlist = []
         for i in range(bs):
             logitlist.append(clslogit[i, target[i]])

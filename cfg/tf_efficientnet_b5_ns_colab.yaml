@@ -1,4 +1,4 @@
-model: tf_efficientnet_b3_ns
+model: tf_efficientnetv2_m
 batch_size: 24
 image_size: 512
 seed: 42
@@ -33,7 +33,7 @@ device: cuda
 model_dir: /content/tf_efficientnet_b4_ns_mixup_betteraug
 n_fold: 5
 mixup: False
-cutmix : False
+cutmix : True
 cutmix_alpha : 1.0
 mixup_alpha: 1.0
 triplet_kernel_size: 7
@@ -42,5 +42,5 @@ triplet: False
 pct_start: 0.2
 div_factor: 1.0e+3
 final_div_factor: 1.0e+3
-snapmix : True
+snapmix : False
 snapmix_alpha : 1.0

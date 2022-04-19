@@ -14,10 +14,10 @@ def train_fn(train_loader, model, criterion, optimizer, epoch, cfg, scheduler=No
     snapmix_loss = SnapMixLoss()
     model.train()
     stream = tqdm(train_loader)
-    if epoch != 0:
-        cfg['snapmix'] = False
+    if epoch < 5:
+        cfg['cutmix'] = False
     else:
-        cfg['snapmix'] = True
+        cfg['cutmix'] = True
 
     for i, (images, target) in enumerate(stream, start=1):
         if cfg['mixup']:
@@ -42,8 +42,7 @@ def train_fn(train_loader, model, criterion, optimizer, epoch, cfg, scheduler=No
             target = target.to(device).long()
 
         with autocast():
-            output, features = model(images)
-            output = output.float()
+            output = model(images).float()
 
         if cfg['mixup']:
             loss = mixup_criterion(criterion, output, target_a, target_b, lam)

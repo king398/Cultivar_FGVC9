@@ -31,7 +31,7 @@ def train_fn(train_loader, model, criterion, optimizer, epoch, cfg, scheduler=No
             target_a = target_a.to(device)
             target_b = target_b.to(device)
         elif cfg['snapmix']:
-            images, target_a, target_b, lam_a, lam_b = snapmix(images, target, cfg['snapmix_alpha'], model)
+            images, target_a, target_b, lam_a, lam_b = snapmix(images.cuda(), target, cfg['snapmix_alpha'], model)
             images = images.to(device, non_blocking=True, dtype=torch.float)
             target_a = target.to(device)
             target_b = target_b.to(device)

@@ -58,3 +58,5 @@ class SnapMixLoss(nn.Module):
         loss_b = criterion(outputs, yb)
         loss = torch.mean(loss_a * lam_a + loss_b * lam_b)
         return loss
+
+

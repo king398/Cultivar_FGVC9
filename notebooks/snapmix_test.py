@@ -59,7 +59,7 @@ image_2 = cv2.cvtColor(image_2, cv2.COLOR_BGR2RGB)
 image_2 = aug(image=image_2)['image']
 image_2 = image_2.unsqueeze(0)
 image = torch.cat((image, image_2))
-image, target, target_b, lam_a = cutmix(image, torch.tensor([3, 4]), 1)
+image, target, target_b, lam_a, lam_b = snapmix(image, torch.tensor([3, 4]), 1, model)
 image = np.array(image.detach().cpu())
 
 plt.imshow((image[0].transpose() * 255).astype(np.uint8))

@@ -260,7 +260,7 @@ class Snapmix_net_effnet(nn.Module):
                                      in_chans=self.cfg['in_channels'])
         n_features = backbone.classifier.in_features
         self.backbone = nn.Sequential(*backbone.children())[:-2]
-        self.classifier = nn.Linear(n_features, cfg['target_size'])
+        self.classifier = nn.Linear(n_features, self.cfg['target_size'])
         self.pool = nn.AdaptiveAvgPool2d((1, 1))
 
     def forward_features(self, x):

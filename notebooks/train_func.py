@@ -5,17 +5,19 @@ from utils import *
 import numpy as np
 import gc
 from augmentations import *
+from loss import *
 
 
 def train_fn(train_loader, model, criterion, optimizer, epoch, cfg, scheduler=None):
     device = torch.device(cfg['device'])
     metric_monitor = MetricMonitor()
+    snapmix_loss = SnapMixLoss()
     model.train()
     stream = tqdm(train_loader)
-    if epoch < 5:
-        cfg['cutmix'] = False
+    if epoch != 0:
+        cfg['snapmix'] = False
     else:
-        cfg['cutmix'] = True
+        cfg['snapmix'] = True
 
     for i, (images, target) in enumerate(stream, start=1):
         if cfg['mixup']:
@@ -28,6 +30,13 @@ def train_fn(train_loader, model, criterion, optimizer, epoch, cfg, scheduler=No
             images = images.to(device, non_blocking=True, dtype=torch.float)
             target_a = target_a.to(device)
             target_b = target_b.to(device)
+        elif cfg['snapmix']:
+            images, target_a, target_b, lam_a, lam_b = snapmix(images, target, cfg['snapmix_alpha'], model)
+            images = images.to(device, non_blocking=True, dtype=torch.float)
+            target_a = target.to(device)
+            target_b = target_b.to(device)
+
+
         else:
             images = images.to(device, non_blocking=True)
             target = target.to(device).long()
@@ -37,8 +46,10 @@ def train_fn(train_loader, model, criterion, optimizer, epoch, cfg, scheduler=No
 
         if cfg['mixup']:
             loss = mixup_criterion(criterion, output, target_a, target_b, lam)
-        if cfg['cutmix']:
+        elif cfg['cutmix']:
             loss = mixup_criterion(criterion, output, target_a, target_b, lam)
+        elif cfg['snapmix']:
+            loss = snapmix_loss(criterion, output, target_a, target_b, lam_a, lam_b)
         else:
             loss = criterion(output, target)
 

@@ -1,0 +1,53 @@
+
+
+20/04/2022 - Wenesday
+a)  Try out Effnetv2 b3 with 40 epochs ✅
+b) read the Solving imagenet paper  Loss paper
+
+21/04/2022 - Thursday
+a) If effnetv2 b3 work try it out with Focal loss with gamma 2 (focal loss not work)
+b) Try getting some new ideas  if get reply for mask then try to crop to mask (no reply)
+c) More or less getting new ideas day
+22/04/2022 - Friday
+a) Try out Asymetric loss or ConvNext
+b) Try plotting embeddings
+23/04/22 - Saturday
+a) Try out Rand Augment or Cutmix + Mixup because of effnet_v2_b3 seems to overfit at 30 epochs , RandAugment First priority Because of ease of implmentation
+24/04/22 - Sunday
+a) Implement Pseudo labelling
+b) Implement Changed TTA which uses diff augs
+
+
+End of week Goal 1 : try to get into top 10 or atleast 0.90 as a score(if achivied next week will send out Emails to team up with any higher team)
+0.90 as a blend target and 0.885 as a single model b3 target (just smart ideas not just increasing image size)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Ideas To try
+1) Focal loss
+2) AsymmetricLossOptimized
+3) Plotting image embeddings
+4) Change tta to use diff type of Augs unlinke just flips and resize
+5) Patch learning (hard to do because of limited resources but will try but if effnet v2 work it may be possible)
+6) ConvNext, Swin v2,  NFnets
+7) Hill climbing
+
+
+~
+~
+~

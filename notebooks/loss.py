@@ -1,52 +1,19 @@
 from torch import nn
 import torch
+import torch.nn.functional as F
 
 
-class FocalLoss(nn.Module):
-    """
-    Implementation of Focal Loss from the paper in multiclass classification
-    Formula:
-        loss = -alpha*((1-p)^gamma)*log(p)
-        y_ls = (1 - α) * y_hot + α / classes
-    Parameters:
-        alpha -- the same as wighting factor in balanced cross entropy
-        gamma -- focusing parameter for modulating factor (1-p)
-        ls    -- label smoothing parameter(alpha)
-        classes     -- No. of classes
-    Default value:
-        gamma -- 2.0 as mentioned in the paper
-        alpha -- 0.25 as mentioned in the paper
-        ls    -- 0.1
-        classes     -- 4
-    """
+class FocalLoss(nn.modules.loss._WeightedLoss):
+    def __init__(self, gamma, weight=None, reduction='mean'):
+        super(FocalLoss, self).__init__(weight, reduction=reduction)
+        self.gamma = gamma
+        self.weight = weight  # weight parameter will act as the alpha parameter to balance class weights
 
-    def __init__(self, alpha, gamma, ls, classes):
-        super(FocalLoss, self).__init__()
-        self.alpha = torch.tensor(alpha)
-        self.gamma = torch.tensor(gamma)
-        self.ls = ls
-        self.classes = classes
-
-    def forward(self, y_true, y_pred):
-        # Define epsilon so that the backpropagation will not result in NaN
-        # for 0 divisor case
-        epsilon = torch.tensor(1e-07)
-        # Add the epsilon to prediction value
-        # y_pred = y_pred + epsilon
-        # label smoothing
-        # y_pred = torch.softmax(y_pred, dim=1)
-        y_pred_ls = (1 - self.ls) * y_pred + self.ls / self.classes
-        # Clip the prediction value
-        y_pred_ls = torch.clamp(y_pred_ls, epsilon, 1.0 - epsilon)
-        # Calculate cross entropy
-        cross_entropy = -y_true * torch.log(y_pred_ls)
-        # Calculate weight that consists of  modulating factor and weighting factor
-        weight = self.alpha * y_true * torch.pow((1 - y_pred_ls), self.gamma)
-        # Calculate focal loss
-        loss = weight * cross_entropy
-        # Sum the losses in mini_batch
-        loss = torch.sum(loss, dim=1)
-        return loss
+    def forward(self, input, target):
+        ce_loss = F.cross_entropy(input, target, reduction=self.reduction, weight=self.weight)
+        pt = torch.exp(-ce_loss)
+        focal_loss = ((1 - pt) ** self.gamma * ce_loss).mean()
+        return focal_loss
 
 
 class SnapMixLoss(nn.Module):
@@ -60,3 +27,55 @@ class SnapMixLoss(nn.Module):
         return loss
 
 
+class AsymmetricLossOptimized(nn.Module):
+    ''' Notice - optimized version, minimizes memory allocation and gpu uploading,
+    favors inplace operations'''
+
+    def __init__(self, gamma_neg=4, gamma_pos=1, clip=0.05, eps=1e-8, disable_torch_grad_focal_loss=False):
+        super(AsymmetricLossOptimized, self).__init__()
+
+        self.gamma_neg = gamma_neg
+        self.gamma_pos = gamma_pos
+        self.clip = clip
+        self.disable_torch_grad_focal_loss = disable_torch_grad_focal_loss
+        self.eps = eps
+
+        # prevent memory allocation and gpu uploading every iteration, and encourages inplace operations
+        self.targets = self.anti_targets = self.xs_pos = self.xs_neg = self.asymmetric_w = self.loss = None
+
+    def forward(self, x, y):
+        """"
+        Parameters
+        ----------
+        x: input logits
+        y: targets (multi-label binarized vector)
+        """
+
+        self.targets = y
+        self.anti_targets = 1 - y
+
+        # Calculating Probabilities
+        self.xs_pos = torch.sigmoid(x)
+        self.xs_neg = 1.0 - self.xs_pos
+
+        # Asymmetric Clipping
+        if self.clip is not None and self.clip > 0:
+            self.xs_neg.add_(self.clip).clamp_(max=1)
+
+        # Basic CE calculation
+        self.loss = self.targets * torch.log(self.xs_pos.clamp(min=self.eps))
+        self.loss.add_(self.anti_targets * torch.log(self.xs_neg.clamp(min=self.eps)))
+
+        # Asymmetric Focusing
+        if self.gamma_neg > 0 or self.gamma_pos > 0:
+            if self.disable_torch_grad_focal_loss:
+                torch.set_grad_enabled(False)
+            self.xs_pos = self.xs_pos * self.targets
+            self.xs_neg = self.xs_neg * self.anti_targets
+            self.asymmetric_w = torch.pow(1 - self.xs_pos - self.xs_neg,
+                                          self.gamma_pos * self.targets + self.gamma_neg * self.anti_targets)
+            if self.disable_torch_grad_focal_loss:
+                torch.set_grad_enabled(True)
+            self.loss *= self.asymmetric_w
+
+        return -self.loss.sum()

@@ -31,7 +31,7 @@ def plot(embeds, labels, fig_path='./example.pdf'):
 
 
 x = np.load(
-    '/home/mithil/PycharmProjects/Cultivar_FGVC9/submissions/tf_efficientnet_b3_ns_mixup_more_epoch_probablity.npy')
+    '/submissions/tf_efficientnet_b3_ns_mixup_more_epoch_probablity.npy')
 data = list(range(100))
 
 plot(np.array(x), np.random.choice(data, len(x)))

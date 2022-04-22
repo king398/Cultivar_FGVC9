@@ -94,8 +94,7 @@ def mixup_data(x, y, alpha=1.0, use_cuda=False):
     return mixed_x, y_a, y_b, lam
 
 
-def mixup_criterion(criterion, pred, y_a, y_b, lam):
-    return lam * criterion(pred, y_a) + (1 - lam) * criterion(pred, y_b)
+
 
 
 def rand_bbox(size, lam):

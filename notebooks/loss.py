@@ -27,6 +27,10 @@ class SnapMixLoss(nn.Module):
         return loss
 
 
+def mixup_criterion(criterion, pred, y_a, y_b, lam):
+    return lam * criterion(pred, y_a) + (1 - lam) * criterion(pred, y_b)
+
+
 class AsymmetricLossOptimized(nn.Module):
     ''' Notice - optimized version, minimizes memory allocation and gpu uploading,
     favors inplace operations'''
@@ -88,9 +92,32 @@ def loss_fn_kd(outputs, labels, teacher_outputs, params):
     NOTE: the KL Divergence for PyTorch comparing the softmaxs of teacher
     and student expects the input tensor to be log probabilities! See Issue #2
     """
-    alpha = params.alpha
-    T = params.temperature
+    alpha = params['alpha']
+    T = params['alpha']
+
     KD_loss = nn.KLDivLoss()(F.log_softmax(outputs / T, dim=1),
-                             F.softmax(teacher_outputs / T, dim=1)) * (alpha * T * T) + F.cross_entropy(outputs, labels) * (1. - alpha)
+                             F.softmax(teacher_outputs / T, dim=1)) * (alpha * T * T) + F.cross_entropy(outputs,
+                                                                                                        labels) * (
+                      1. - alpha)
+
+    return KD_loss
+
+
+def loss_fn_kd_mixup(outputs, y_a, y_b, lam, teacher_outputs, params):
+    """
+    Compute the knowledge-distillation (KD) loss given outputs, labels.
+    "Hyper parameters": temperature and alpha
+    NOTE: the KL Divergence for PyTorch comparing the softmax of teacher
+    and student expects the input tensor to be log probabilities! See Issue #2
+    """
+    alpha = params['alpha']
+    T = params['alpha']
+
+    KD_loss = nn.KLDivLoss()(F.log_softmax(outputs / T, dim=1),
+                             F.softmax(teacher_outputs / T, dim=1)) * (alpha * T * T) + mixup_criterion(F.cross_entropy,
+                                                                                                        outputs,
+                                                                                                        y_a, y_b,
+                                                                                                        lam) * (
+                      1. - alpha)
 
     return KD_loss

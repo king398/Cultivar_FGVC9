@@ -47,22 +47,16 @@ class Snapmix_net(nn.Module):
 
 
 model = Snapmix_net()
-aug = get_test_transforms(512)
+aug = get_test_transforms(2048)
 image = cv2.imread('/home/mithil/PycharmProjects/Cultivar_FGVC9/data/archive/test/526928.jpeg')
 image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
 
 image = aug(image=image)['image']
-image = image.unsqueeze(0)
-image_2 = cv2.imread('/home/mithil/PycharmProjects/Cultivar_FGVC9/data/archive/test/754146.jpeg')
-image_2 = cv2.cvtColor(image_2, cv2.COLOR_BGR2RGB)
+image = np.array(image)
+image = image.transpose()
+image = image * 255
+image = image.astype(np.uint8)
+print(image.shape)
+plt.imshow(image)
 
-image_2 = aug(image=image_2)['image']
-image_2 = image_2.unsqueeze(0)
-image = torch.cat((image, image_2))
-image, target, target_b, lam_a, lam_b = snapmix(image, torch.tensor([3, 4]), 1, model)
-image = np.array(image.detach().cpu())
-
-plt.imshow((image[0].transpose() * 255).astype(np.uint8))
-print(target[0])
-print(target_b[0])
 plt.show()

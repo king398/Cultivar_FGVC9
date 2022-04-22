@@ -22,8 +22,8 @@ def get_train_transforms(DIM):
             A.CoarseDropout(),
 
             A.Normalize(
-                mean=[0.485, 0.456, 0.406],
-                std=[0.229, 0.224, 0.225],
+                mean=[0.3511794, 0.37462908, 0.2873578],
+                std=[0.20823358, 0.2117826, 0.16226698],
             ),
 
             ToTensorV2(),
@@ -36,8 +36,8 @@ def get_valid_transforms(DIM):
         [
             A.Resize(DIM, DIM),
             A.Normalize(
-                mean=[0.485, 0.456, 0.406],
-                std=[0.229, 0.224, 0.225],
+                mean=[0.3511794, 0.37462908, 0.2873578],
+                std=[0.20823358, 0.2117826, 0.16226698],
             ),
             ToTensorV2(p=1.0)
         ]
@@ -53,6 +53,25 @@ def get_test_transforms(DIM):
                 std=[0.229, 0.224, 0.225],
             ),
             ToTensorV2(p=1.0)
+        ]
+    )
+
+
+def randaugment(dim, n):
+    return A.Compose(
+        [
+            A.RandomResizedCrop(dim, dim),
+            A.SomeOf([A.HorizontalFlip(),
+                      A.VerticalFlip(),
+                      A.ShiftScaleRotate(shift_limit=0.1, scale_limit=0.1, rotate_limit=45, p=0.5),
+                      A.RandomBrightnessContrast(brightness_limit=0.2, contrast_limit=0.2, p=0.5),
+                      A.CoarseDropout(),
+                      A.Sharpen(),
+                      A.ColorJitter(),
+                      A.Equalize(),
+                      A.Affine(),
+                      A.InvertImg(),
+                      A.Posterize(), ], n)
         ]
     )
 

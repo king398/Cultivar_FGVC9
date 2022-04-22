@@ -49,4 +49,4 @@ Ideas To try
 7) Hill climbing
 8) Knowledge Distillation 
 9) Dataset own mean and std with mean=[0.3511794, 0.37462908, 0.2873578],std=[0.20823358, 0.2117826, 0.16226698],
-
+10 ) AdamW

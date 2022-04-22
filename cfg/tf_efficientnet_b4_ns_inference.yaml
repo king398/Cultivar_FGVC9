@@ -1,5 +1,5 @@
 model: tf_efficientnetv2_b3
-batch_size: 32
+batch_size: 16
 image_size: 1024
 seed: 42
 pretrained: false

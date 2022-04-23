@@ -49,8 +49,8 @@ def get_test_transforms(DIM):
         [
             A.Resize(DIM, DIM),
             A.Normalize(
-                mean=[0.485, 0.456, 0.406],
-                std=[0.229, 0.224, 0.225],
+                mean=[0.3511794, 0.37462908, 0.2873578],
+                std=[0.20823358, 0.2117826, 0.16226698],
             ),
             ToTensorV2(p=1.0)
         ]
@@ -71,7 +71,8 @@ def randaugment(dim, n):
                       A.Equalize(),
                       A.Affine(),
                       A.InvertImg(),
-                      A.Posterize(), ], n)
+                      A.Posterize(),
+                      A.Solarize()], n)
         ]
     )
 
@@ -92,9 +93,6 @@ def mixup_data(x, y, alpha=1.0, use_cuda=False):
     mixed_x = lam * x + (1 - lam) * x[index, :]
     y_a, y_b = y, y[index]
     return mixed_x, y_a, y_b, lam
-
-
-
 
 
 def rand_bbox(size, lam):

@@ -15,11 +15,12 @@ def get_train_transforms(DIM):
     return A.Compose(
         [
             A.RandomResizedCrop(height=DIM, width=DIM),
+            A.CLAHE(),
             A.HorizontalFlip(),
             A.VerticalFlip(),
-            A.ShiftScaleRotate(shift_limit=0.1, scale_limit=0.1, rotate_limit=45, p=0.5),
+            A.Affine(),
             A.CoarseDropout(),
-            A.CLAHE(),
+
             A.ColorJitter(brightness=0.2, contrast=0.05, saturation=0.1),
 
             A.Normalize(

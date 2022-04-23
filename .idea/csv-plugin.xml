@@ -108,6 +108,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="/submissions/blend/tf_effnetv2_b3_cutmix_40_tf_effnetv2_b3_cutmix_35_diffmeanstd.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/submissions/blend_submission_effnetb4_effnetb3miuxp_resnet34.csv">
           <value>
             <Attribute>

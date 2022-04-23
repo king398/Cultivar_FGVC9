@@ -24,8 +24,12 @@ def main(cfg):
     label_encoder = preprocessing.LabelEncoder()
     train_df['cultivar'] = label_encoder.fit_transform(train_df['cultivar'])
     paths = glob.glob(f"{cfg['test_dir']}/*.jpeg")
-    test_dataset = Cultivar_data_inference(image_path=paths,
-                                           transform=get_test_transforms(cfg['image_size']))
+    test_dataset = Cultivar_data_inference_tta(image_path=paths,
+                                               transform=get_test_transforms(cfg['image_size']),
+                                               transform_2=get_test_transforms_flip(cfg['image_size']),
+                                               transform_3=get_test_transforms_shift_scale(cfg['image_size']),
+                                               transform_4=get_test_transforms_brightness(cfg['image_size']),
+                                               transform_5=get_test_transforms_all(cfg['image_size']))
 
     test_loader = DataLoader(
         test_dataset, batch_size=cfg['batch_size'], shuffle=False,
@@ -38,11 +42,10 @@ def main(cfg):
     for path in glob.glob(f"{cfg['model_path']}/*.pth"):
         model = BaseModelEffNet(cfg)
         model.load_state_dict(torch.load(path))
-        model = tta.ClassificationTTAWrapper(model, tta.aliases.ten_crop_transform(512, 512))
 
         model.to(device)
         model.eval()
-        probablity = inference_fn(test_loader, model, cfg)
+        probablity = inference_fn_tta(test_loader, model, cfg)
 
         if probabilitys is None:
             probabilitys = probablity / 5

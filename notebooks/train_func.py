@@ -204,3 +204,34 @@ def nn_valid(model, loader, device, criterion, epoch):
             stream.set_description(f"Epoch: {epoch:02}. Valid. {metric_monitor}")
             accuracy_list.append(accuracy)
     return np.mean(accuracy_list)
+
+
+def inference_fn_tta(test_loader, model, cfg):
+    device = torch.device(cfg['device'])
+    model.eval()
+    stream = tqdm(test_loader)
+    preds = None
+    with torch.no_grad():
+        for i, (images_1, images_2, images_3, images_4, images_5) in enumerate(stream, start=1):
+            images_1 = images_1.to(device, non_blocking=True)
+            images_2 = images_2.to(device, non_blocking=True)
+            images_3 = images_3.to(device, non_blocking=True)
+            images_4 = images_4.to(device, non_blocking=True)
+            images_5 = images_5.to(device, non_blocking=True)
+
+            with autocast():
+                output_1 = model(images_1).softmax(1).detach().cpu() / 5
+                output_2 = model(images_2).softmax(1).detach().cpu() / 5
+                output_3 = model(images_3).softmax(1).detach().cpu() / 5
+                output_4 = model(images_4).softmax(1).detach().cpu() / 5
+                output_5 = model(images_5).softmax(1).detach().cpu() / 5
+
+            pred = output_1 + output_2 + output_3 + output_4 + output_5
+            if preds is None:
+                preds = pred
+            else:
+                preds = torch.cat((preds, pred))
+            del pred
+            gc.collect()
+
+    return preds

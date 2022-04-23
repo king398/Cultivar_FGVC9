@@ -18,12 +18,13 @@ def get_train_transforms(DIM):
             A.HorizontalFlip(),
             A.VerticalFlip(),
             A.ShiftScaleRotate(shift_limit=0.1, scale_limit=0.1, rotate_limit=45, p=0.5),
-            A.RandomBrightnessContrast(brightness_limit=0.2, contrast_limit=0.2, p=0.5),
             A.CoarseDropout(),
+            A.CLAHE(),
+            A.ColorJitter(brightness=0.2, contrast=0.05, saturation=0.1),
 
             A.Normalize(
-                mean=[0.3511794, 0.37462908, 0.2873578],
-                std=[0.20823358, 0.2117826, 0.16226698],
+                mean=[0.485, 0.456, 0.406],
+                std=[0.229, 0.224, 0.225],
             ),
 
             ToTensorV2(),
@@ -36,8 +37,8 @@ def get_valid_transforms(DIM):
         [
             A.Resize(DIM, DIM),
             A.Normalize(
-                mean=[0.3511794, 0.37462908, 0.2873578],
-                std=[0.20823358, 0.2117826, 0.16226698],
+                mean=[0.485, 0.456, 0.406],
+                std=[0.229, 0.224, 0.225],
             ),
             ToTensorV2(p=1.0)
         ]
@@ -49,10 +50,74 @@ def get_test_transforms(DIM):
         [
             A.Resize(DIM, DIM),
             A.Normalize(
-                mean=[0.3511794, 0.37462908, 0.2873578],
-                std=[0.20823358, 0.2117826, 0.16226698],
+                mean=[0.485, 0.456, 0.406],
+                std=[0.229, 0.224, 0.225],
             ),
             ToTensorV2(p=1.0)
+        ]
+    )
+
+
+def get_test_transforms_flip(DIM):
+    return A.Compose(
+        [
+            A.RandomResizedCrop(DIM, DIM),
+            A.HorizontalFlip(),
+            A.VerticalFlip(),
+            A.Normalize(
+                mean=[0.485, 0.456, 0.406],
+                std=[0.229, 0.224, 0.225],
+            ),
+            ToTensorV2(p=1.0)
+        ]
+    )
+
+
+def get_test_transforms_shift_scale(DIM):
+    return A.Compose(
+        [
+            A.RandomResizedCrop(DIM, DIM),
+            A.ShiftScaleRotate(shift_limit=0.1, scale_limit=0.1, rotate_limit=45, p=0.5),
+            A.Normalize(
+                mean=[0.485, 0.456, 0.406],
+                std=[0.229, 0.224, 0.225],
+            ),
+            ToTensorV2(p=1.0)
+        ]
+    )
+
+
+def get_test_transforms_brightness(DIM):
+    return A.Compose(
+        [
+            A.Resize(DIM, DIM),
+            A.RandomBrightnessContrast(brightness_limit=0.2, contrast_limit=0.2, p=0.5),
+
+            A.Normalize(
+                mean=[0.485, 0.456, 0.406],
+                std=[0.229, 0.224, 0.225],
+            ),
+            ToTensorV2(p=1.0)
+        ]
+    )
+
+
+def get_test_transforms_all(DIM):
+    return A.Compose(
+        [
+            A.RandomResizedCrop(height=DIM, width=DIM),
+            A.HorizontalFlip(),
+            A.VerticalFlip(),
+            A.ShiftScaleRotate(shift_limit=0.1, scale_limit=0.1, rotate_limit=45, p=0.5),
+            A.RandomBrightnessContrast(brightness_limit=0.2, contrast_limit=0.2, p=0.5),
+            A.CoarseDropout(),
+
+            A.Normalize(
+                mean=[0.485, 0.456, 0.406],
+                std=[0.229, 0.224, 0.225],
+            ),
+
+            ToTensorV2(),
         ]
     )
 

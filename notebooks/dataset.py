@@ -100,3 +100,34 @@ class Cultivar_data_oof(Dataset):
         label = self.targets[idx]
         id = self.ids[idx]
         return image, label, id
+
+
+class Cultivar_data_inference_tta(Dataset):
+    def __init__(self, image_path, transform=None, transform_2=None, transform_3=None, transform_4=None,
+                 transform_5=None):
+        self.image_path = image_path
+        self.transform = transform
+        self.transform_2 = transform_2
+        self.transform_3 = transform_3
+        self.transform_4 = transform_4
+        self.transform_5 = transform_5
+
+    def __len__(self):
+        return len(self.image_path)
+
+    def __getitem__(self, idx):
+        image = cv2.imread(self.image_path[idx])
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        image = np.array(image)
+
+        if self.transform is not None:
+            image_1 = self.transform(image=image)['image']
+        if self.transform_2 is not None:
+            image_2 = self.transform_2(image=image)['image']
+        if self.transform_3 is not None:
+            image_3 = self.transform_3(image=image)['image']
+        if self.transform_4 is not None:
+            image_4 = self.transform_4(image=image)['image']
+        if self.transform_5 is not None:
+            image_5 = self.transform_5(image=image)['image']
+        return image_1, image_2, image_3, image_4, image_5

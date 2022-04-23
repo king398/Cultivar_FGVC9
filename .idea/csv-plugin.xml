@@ -94,6 +94,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="/submissions/blend/tf_efficientnet_b3_ns_cutmix_tf_effnetv2_b3_cutmix_40_probablity.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/submissions/blend/tf_efficientnet_b3_ns_mixup_more_epoch_tta_submission_weights_0_3_07.csv">
           <value>
             <Attribute>
@@ -150,6 +157,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="/submissions/tta/ffnetv2_b3_cutmix_40_submission.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/submissions/tta/tf_efficientnet_b3_AUGS_ns_mixup_more_epoch_tta_submission.csv">
           <value>
             <Attribute>
@@ -165,6 +179,13 @@
           </value>
         </entry>
         <entry key="/submissions/tta/tf_efficientnet_b5_ns_mixup_more_epoch_tta_submission.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/submissions/tta/tf_effnetv2_b3_cutmix_35_own_meanstd_submission.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />

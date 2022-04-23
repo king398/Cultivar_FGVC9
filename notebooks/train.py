@@ -4,11 +4,10 @@ from pathlib import Path
 
 import pandas as pd
 # Deep learning Stuff
-import torch.optim as optim
 import yaml
 from sklearn import preprocessing
 from sklearn.model_selection import StratifiedKFold
-
+from torch.optim import *
 # Function Created by me
 from dataset import *
 from model import *
@@ -74,8 +73,8 @@ def main(cfg):
             model.to(device)
             criterion = nn.CrossEntropyLoss()
 
-            optimizer = optim.Adam(model.parameters(), lr=float(cfg['lr']),
-                                   )
+            optimizer = eval(cfg['optimizer'])(model.parameters(), lr=float(cfg['lr']))
+
             scheduler = get_scheduler(optimizer, cfg, train_loader)
             for epoch in range(cfg['epochs']):
                 train_fn(train_loader, model, criterion, optimizer, epoch, cfg, scheduler)

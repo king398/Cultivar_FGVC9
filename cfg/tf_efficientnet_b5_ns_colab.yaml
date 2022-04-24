@@ -45,3 +45,4 @@ div_factor: 1.0e+3
 final_div_factor: 1.0e+3
 snapmix : False
 snapmix_alpha : 1.0
+n_aug : 3

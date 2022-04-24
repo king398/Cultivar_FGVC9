@@ -111,7 +111,6 @@ def get_test_transforms_all(DIM):
             A.VerticalFlip(),
             A.ShiftScaleRotate(shift_limit=0.1, scale_limit=0.1, rotate_limit=45, p=0.5),
             A.RandomBrightnessContrast(brightness_limit=0.2, contrast_limit=0.2, p=0.5),
-            A.CoarseDropout(),
 
             A.Normalize(
                 mean=[0.485, 0.456, 0.406],
@@ -123,7 +122,7 @@ def get_test_transforms_all(DIM):
     )
 
 
-def randaugment(dim, n):
+def randaugment(dim, n=5):
     return A.Compose(
         [
             A.RandomResizedCrop(dim, dim),
@@ -180,7 +179,8 @@ def rand_bbox(size, lam):
 
 
 def cutmix(data, target, alpha):
-    indices = torch.randperm(data.size(0))
+    indices = torch.r
+    andperm(data.size(0))
     shuffled_data = data[indices]
     shuffled_target = target[indices]
 

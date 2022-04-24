@@ -115,6 +115,20 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="/submissions/blend/tf_effnetv2_b3_cutmix_40_tf_effnetv2_b3_cutmix_35_difftta.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/submissions/blend/ttf_effnetv2_b3_cutmix_35_own_tta_640_tf_effnetv2_b3_cutmix_35_difftta.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/submissions/blend_submission_effnetb4_effnetb3miuxp_resnet34.csv">
           <value>
             <Attribute>
@@ -193,6 +207,20 @@
           </value>
         </entry>
         <entry key="/submissions/tta/tf_effnetv2_b3_cutmix_35_own_meanstd_submission.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/submissions/tta/tf_effnetv2_b3_cutmix_35_own_tta_640_submission.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/submissions/tta/tf_effnetv2_b3_cutmix_35_own_tta_submission.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />

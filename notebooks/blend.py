@@ -9,7 +9,7 @@ label_encoder.fit(train_csv['cultivar'])
 
 effnet = torch.tensor(
     np.load(
-        '/home/mithil/PycharmProjects/Cultivar_FGVC9/submissions/tta/ffnetv2_b3_cutmix_40_probablity.npy'))
+        '/home/mithil/PycharmProjects/Cultivar_FGVC9/submissions/tta/tf_effnetv2_b3_cutmix_35_own_tta_640_probablity.npy'))
 
 effnet_big = torch.tensor(
     np.load(
@@ -20,9 +20,9 @@ effnet_big = torch.tensor(
 ids = pd.read_csv(
     '/home/mithil/PycharmProjects/Cultivar_FGVC9/submissions/tf_efficientnet_b3_ns_mixup_more_epoch_tta_submission.csv')[
     'filename']
-probablity = effnet * 0.5 + effnet_big * 0.5
+probablity = effnet * 0.6 + effnet_big * 0.4
 preds = torch.argmax(probablity, 1).numpy()
 sub = pd.DataFrame({"filename": ids, "cultivar": label_encoder.inverse_transform(preds)})
 sub.to_csv(
-    '/home/mithil/PycharmProjects/Cultivar_FGVC9/submissions/blend/tf_effnetv2_b3_cutmix_40_tf_effnetv2_b3_cutmix_35_difftta.csv',
+    '/home/mithil/PycharmProjects/Cultivar_FGVC9/submissions/blend/ttf_effnetv2_b3_cutmix_35_own_tta_640_tf_effnetv2_b3_cutmix_35_difftta.csv',
     index=False)

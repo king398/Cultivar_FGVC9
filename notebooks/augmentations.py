@@ -179,8 +179,7 @@ def rand_bbox(size, lam):
 
 
 def cutmix(data, target, alpha):
-    indices = torch.r
-    andperm(data.size(0))
+    indices = torch.randperm(data.size(0))
     shuffled_data = data[indices]
     shuffled_target = target[indices]
 

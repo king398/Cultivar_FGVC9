@@ -13,7 +13,7 @@ effnet = torch.tensor(
 
 effnet_big = torch.tensor(
     np.load(
-        '/home/mithil/PycharmProjects/Cultivar_FGVC9/submissions/tta/tf_effnetv2_b3_cutmix_40_own_tta_probablity.npy',
+    '/home/mithil/PycharmProjects/Cultivar_FGVC9/submissions/tta/tf_effnetv2_b3_cutmix_40_own_meanstd_probablity.npy',
         allow_pickle=True),
 )
 
@@ -24,5 +24,5 @@ probablity = effnet * 0.6 + effnet_big * 0.4
 preds = torch.argmax(probablity, 1).numpy()
 sub = pd.DataFrame({"filename": ids, "cultivar": label_encoder.inverse_transform(preds)})
 sub.to_csv(
-    '/home/mithil/PycharmProjects/Cultivar_FGVC9/submissions/blend/ttf_effnetv2_b3_cutmix_35_own_tta_640_tf_effnetv2_b3_cutmix_35_difftta.csv',
+    '/home/mithil/PycharmProjects/Cultivar_FGVC9/submissions/blend/tf_effnetv2_b3_cutmix_40_own_meanstd_probablity_tf_effnetv2_b3_cutmix_35_own_tta_640_probablity.csv',
     index=False)

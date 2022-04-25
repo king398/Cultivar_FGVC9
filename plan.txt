@@ -49,6 +49,6 @@ Ideas To try
 7) Hill climbing
 8) Knowledge Di stillation
 9) Dataset own mean and std with mean =[0.3511794, 0.37462908, 0.2873578],std=[0.20823358, 0.2117826, 0.16226698],(worked on cv ;not worked on lb possible because of diff test and train)
-10 ) AdamW
-11) added CLAHE and affnine lets if it works
+10 ) AdamW(trying)
+11) added CLAHE and affnine lets if it works (2 folds  done)
 12) Higher image size for just inference (done and worked, we use get the formula ImageSizeI == ImageSizeT * 1.25)

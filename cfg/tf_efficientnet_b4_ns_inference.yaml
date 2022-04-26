@@ -1,17 +1,17 @@
 model: tf_efficientnetv2_b3
 batch_size: 32
-image_size: 768
+image_size: 640
 seed: 42
 pretrained: false
-num_workers: 2
+num_workers: 3
 pin_memory: true
-model_path: /Cultivar_FGVC9/models/effnetv2_b3_cutmix_40epoch
+model_path: /Cultivar_FGVC9/models/effnetv2_b3_cutmix_40epoch_diffmeanstd
 test_dir: /Cultivar_FGVC9/data/archive/test
 train_file_path: /Cultivar_FGVC9/data/archive/train_cultivar_mapping.csv
 
 sample_sub_file: /Cultivar_FGVC9/data/archive/sample_submission.csv
-submission_file: /Cultivar_FGVC9/submissions/tta/tf_effnetv2_b3_cutmix_35_own_tta_768_submission.csv
-probablity_file: /Cultivar_FGVC9/submissions/tta/tf_effnetv2_b3_cutmix_35_own_tta_768_probablity.npy
+submission_file: /Cultivar_FGVC9/submissions/tta/tf_effnetv2_b3_cutmix_35_own_tta_meanstd_640_submission.csv
+probablity_file: /Cultivar_FGVC9/submissions/tta/tf_effnetv2_b3_cutmix_35_own_tta_meanstd_640_probablity.npy
 target_size: 100
 device: cuda
 in_channels: 3

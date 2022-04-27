@@ -8,7 +8,7 @@ from augmentations import *
 from loss import *
 
 
-def train_fn(train_loader, model, criterion, optimizer, epoch, cfg, scheduler=None):
+def train_fn(train_loader, model, criterion, criterion_2, optimizer, epoch, cfg, scheduler=None):
     device = torch.device(cfg['device'])
     metric_monitor = MetricMonitor()
     snapmix_loss = SnapMixLoss()
@@ -47,8 +47,10 @@ def train_fn(train_loader, model, criterion, optimizer, epoch, cfg, scheduler=No
         if cfg['mixup']:
             loss = mixup_criterion(criterion, output, target_a, target_b, lam)
         elif cfg['cutmix']:
-            loss = mixup_criterion(criterion, output, target_a, target_b, lam)
-        elif cfg['snapmix']:
+            loss_1 = mixup_criterion(criterion, output, target_a, target_b, lam)
+            loss_2 = mixup_criterion(criterion_2, output, target_a, target_b, lam)
+            loss = loss_1 + loss_2
+        elif cfg['snapmix'] :
             loss = snapmix_loss(criterion, output, target_a, target_b, lam_a, lam_b)
         else:
             loss = criterion(output, target)

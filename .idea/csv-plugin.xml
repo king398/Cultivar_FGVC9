@@ -94,6 +94,20 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="/submissions/blend/effnetv2_b3_CLAHE_augs_640_probablity_tf_effnetv2_b3_cutmix_35_own_tta_640_probablity.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/submissions/blend/effnetv2_b3_diffmean_augs_640_7x_probablity_tf_effnetv2_b3_cutmix_35_own_tta_640_probablity.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/submissions/blend/tf_efficientnet_b3_ns_cutmix_tf_effnetv2_b3_cutmix_40_probablity.csv">
           <value>
             <Attribute>
@@ -193,6 +207,20 @@
           </value>
         </entry>
         <entry key="/submissions/tf_efficientnet_b4_ns_mixup_submission.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/submissions/tta/effnetv2_b3_CLAHE_augs_640_submission.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/submissions/tta/effnetv2_b3_cutmix_40epoch_diffmeanstd_640_7xtta_submission.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />

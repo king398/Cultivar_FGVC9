@@ -46,80 +46,103 @@ def get_valid_transforms(DIM):
 
 def get_test_transforms(DIM):
     return A.Compose(
-        [A.CLAHE(),
-         A.Resize(DIM, DIM),
-         A.Normalize(
-             mean=[0.485, 0.456, 0.406],
-             std=[0.229, 0.224, 0.225],
-         ),
-         ToTensorV2(p=1.0)
-         ]
+        [
+            A.Resize(DIM, DIM),
+            A.Normalize(
+                mean=[0.3511794, 0.37462908, 0.2873578],
+                std=[0.20823358, 0.2117826, 0.16226698],
+            ),
+            ToTensorV2(p=1.0)
+        ]
     )
 
 
 def get_test_transforms_flip(DIM):
     return A.Compose(
-        [A.CLAHE(),
-         A.RandomResizedCrop(DIM, DIM),
-         A.HorizontalFlip(),
-         A.VerticalFlip(),
-         A.Normalize(
-             mean=[0.485, 0.456, 0.406],
-             std=[0.229, 0.224, 0.225],
-         ),
-         ToTensorV2(p=1.0)
-         ]
+        [
+            A.RandomResizedCrop(DIM, DIM),
+            A.HorizontalFlip(),
+            A.Normalize(
+                mean=[0.3511794, 0.37462908, 0.2873578],
+                std=[0.20823358, 0.2117826, 0.16226698],
+            ),
+            ToTensorV2(p=1.0)
+        ]
     )
 
 
 def get_test_transforms_shift_scale(DIM):
     return A.Compose(
-        [A.CLAHE(),
-         A.RandomResizedCrop(DIM, DIM),
-         A.Affine(),
-         A.Normalize(
-             mean=[0.485, 0.456, 0.406],
-             std=[0.229, 0.224, 0.225],
-         ),
-         ToTensorV2(p=1.0)
-         ]
+        [
+            A.RandomResizedCrop(DIM, DIM),
+            A.ShiftScaleRotate(shift_limit=0.1, scale_limit=0.1, rotate_limit=45, p=0.5),
+            A.Normalize(
+                mean=[0.3511794, 0.37462908, 0.2873578],
+                std=[0.20823358, 0.2117826, 0.16226698],
+            ),
+            ToTensorV2(p=1.0)
+        ]
     )
 
 
 def get_test_transforms_brightness(DIM):
     return A.Compose(
-        [A.CLAHE(),
-         A.RandomResizedCrop(DIM, DIM),
-         A.ColorJitter(brightness=0.2, contrast=0.05, saturation=0.1),
+        [
+            A.RandomResizedCrop(DIM, DIM),
+            A.RandomBrightnessContrast(brightness_limit=0.2, contrast_limit=0.2, p=0.5),
 
-         A.Normalize(
-             mean=[0.485, 0.456, 0.406],
-             std=[0.229, 0.224, 0.225],
-         ),
-         ToTensorV2(p=1.0)
-         ]
+            A.Normalize(
+                mean=[0.3511794, 0.37462908, 0.2873578],
+                std=[0.20823358, 0.2117826, 0.16226698],
+            ),
+            ToTensorV2(p=1.0)
+        ]
     )
 
 
 def get_test_transforms_all(DIM):
     return A.Compose(
-        [A.CLAHE(),
-         A.RandomResizedCrop(height=DIM, width=DIM),
+        [
+            A.RandomResizedCrop(height=DIM, width=DIM),
+            A.HorizontalFlip(),
+            A.VerticalFlip(),
+            A.ShiftScaleRotate(shift_limit=0.1, scale_limit=0.1, rotate_limit=45, p=0.5),
+            A.RandomBrightnessContrast(brightness_limit=0.2, contrast_limit=0.2, p=0.5),
 
-         A.HorizontalFlip(),
-         A.VerticalFlip(),
-         A.Affine(),
-         A.CoarseDropout(),
+            A.Normalize(
+                mean=[0.3511794, 0.37462908, 0.2873578],
+                std=[0.20823358, 0.2117826, 0.16226698],
+            ),
 
-         A.ColorJitter(brightness=0.2, contrast=0.05, saturation=0.1),
+            ToTensorV2(),
+        ]
+    )
 
-         A.Normalize(
-             mean=[0.485, 0.456, 0.406],
-             std=[0.229, 0.224, 0.225],
-         ),
 
-         ToTensorV2(),
-         ]
+def get_test_transforms_vflip(DIM):
+    return A.Compose(
+        [
+            A.RandomResizedCrop(height=DIM, width=DIM),
+            A.VerticalFlip(),
+            A.Normalize(
+                mean=[0.3511794, 0.37462908, 0.2873578],
+                std=[0.20823358, 0.2117826, 0.16226698],
+            ),
+            ToTensorV2(),
+        ]
+    )
+
+
+def get_test_transforms_crop(DIM):
+    return A.Compose(
+        [
+            A.RandomResizedCrop(height=DIM, width=DIM),
+            A.Normalize(
+                mean=[0.3511794, 0.37462908, 0.2873578],
+                std=[0.20823358, 0.2117826, 0.16226698],
+            ),
+            ToTensorV2(),
+        ]
     )
 
 

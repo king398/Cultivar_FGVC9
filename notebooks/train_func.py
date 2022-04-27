@@ -66,6 +66,25 @@ def train_fn(train_loader, model, criterion, optimizer, epoch, cfg, scheduler=No
         stream.set_description(f"Epoch: {epoch:02}. Train. {metric_monitor}")
 
 
+def pseudo_fn(pseudo_loader, train_loader, model, criterion, optimizer, epoch, cfg, scheduler=None):
+    device = torch.device(cfg['device'])
+    metric_monitor = MetricMonitor()
+    snapmix_loss = SnapMixLoss()
+    model.train()
+    pseudo_stream = tqdm(pseudo_loader)
+    for i, image in enumerate(pseudo_stream):
+        image = image.to(device, non_blocking=True)
+        model.eval()
+        with autocast():
+            output_unlabeled = model(image)
+            pseudo_labeled = torch.argmax(torch.softmax(output_unlabeled, 1), dim=1)
+        model.train()
+        with autocast():
+            output = model(image)
+
+        unlabeled_loss = alpha_weight(100) * criterion(output_unlabeled, pseudo_labeled)
+
+
 def validate_fn(val_loader, model, criterion, epoch, cfg):
     device = torch.device(cfg['device'])
     metric_monitor = MetricMonitor()
@@ -212,21 +231,25 @@ def inference_fn_tta(test_loader, model, cfg):
     stream = tqdm(test_loader)
     preds = None
     with torch.no_grad():
-        for i, (images_1, images_2, images_3, images_4, images_5) in enumerate(stream, start=1):
+        for i, (images_1, images_2, images_3, images_4, images_5, images_6, images_7) in enumerate(stream, start=1):
             images_1 = images_1.to(device, non_blocking=True)
             images_2 = images_2.to(device, non_blocking=True)
             images_3 = images_3.to(device, non_blocking=True)
             images_4 = images_4.to(device, non_blocking=True)
             images_5 = images_5.to(device, non_blocking=True)
+            images_6 = images_6.to(device, non_blocking=True)
+            images_7 = images_7.to(device, non_blocking=True)
 
             with autocast():
-                output_1 = model(images_1).softmax(1).detach().cpu() / 5
-                output_2 = model(images_2).softmax(1).detach().cpu() / 5
-                output_3 = model(images_3).softmax(1).detach().cpu() / 5
-                output_4 = model(images_4).softmax(1).detach().cpu() / 5
-                output_5 = model(images_5).softmax(1).detach().cpu() / 5
+                output_1 = model(images_1).softmax(1).detach().cpu() / 7
+                output_2 = model(images_2).softmax(1).detach().cpu() / 7
+                output_3 = model(images_3).softmax(1).detach().cpu() / 7
+                output_4 = model(images_4).softmax(1).detach().cpu() / 7
+                output_5 = model(images_5).softmax(1).detach().cpu() / 7
+                output_6 = model(images_6).softmax(1).detach().cpu() / 7
+                output_7 = model(images_7).softmax(1).detach().cpu() / 7
 
-            pred = output_1 + output_2 + output_3 + output_4 + output_5
+            pred = output_1 + output_2 + output_3 + output_4 + output_5 + output_6 + output_7
             if preds is None:
                 preds = pred
             else:

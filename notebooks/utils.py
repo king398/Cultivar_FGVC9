@@ -90,3 +90,17 @@ def get_scheduler(optimizer, scheduler_params, train_loader):
 def return_filpath(name, folder):
     path = os.path.join(folder, f'{name}')
     return path
+
+
+T1 = 100
+T2 = 700
+af = 3
+
+
+def alpha_weight(step):
+    if step < T1:
+        return 0.0
+    elif step > T2:
+        return af
+    else:
+        return ((step - T1) / (T2 - T1)) * af

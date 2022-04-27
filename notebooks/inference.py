@@ -29,7 +29,9 @@ def main(cfg):
                                                transform_2=get_test_transforms_flip(cfg['image_size']),
                                                transform_3=get_test_transforms_shift_scale(cfg['image_size']),
                                                transform_4=get_test_transforms_brightness(cfg['image_size']),
-                                               transform_5=get_test_transforms_all(cfg['image_size']))
+                                               transform_5=get_test_transforms_all(cfg['image_size']),
+                                               transform_6=get_test_transforms_vflip(cfg['image_size']),
+                                               transform_7=get_test_transforms_crop(cfg['image_size']))
 
     test_loader = DataLoader(
         test_dataset, batch_size=cfg['batch_size'], shuffle=False,

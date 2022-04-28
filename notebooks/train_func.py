@@ -47,14 +47,11 @@ def train_fn(train_loader, model, criterion, criterion_2, optimizer, epoch, cfg,
         if cfg['mixup']:
             loss = mixup_criterion(criterion, output, target_a, target_b, lam)
         elif cfg['cutmix']:
-            loss_1 = mixup_criterion(criterion, output, target_a, target_b, lam)
-            loss_2 = mixup_criterion(criterion_2, output, target_a, target_b, lam)
-            loss = loss_1 + loss_2
-        elif cfg['snapmix'] :
+            loss = mixup_criterion(criterion, output, target_a, target_b, lam)
+        elif cfg['snapmix']:
             loss = snapmix_loss(criterion, output, target_a, target_b, lam_a, lam_b)
         else:
-            loss = criterion(output.cuda(), target.cuda()) + criterion_2(output.cuda(), target.cuda())
-
+            loss = criterion(output, target)
 
         accuracy = accuracy_score(output, target)
 

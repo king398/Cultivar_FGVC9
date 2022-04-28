@@ -53,7 +53,8 @@ def train_fn(train_loader, model, criterion, criterion_2, optimizer, epoch, cfg,
         elif cfg['snapmix'] :
             loss = snapmix_loss(criterion, output, target_a, target_b, lam_a, lam_b)
         else:
-            loss = criterion(output, target)
+            loss = criterion(output.cuda(), target.cuda()) + criterion_2(output.cuda(), target.cuda())
+
 
         accuracy = accuracy_score(output, target)
 

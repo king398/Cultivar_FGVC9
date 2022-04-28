@@ -71,7 +71,7 @@ def main(cfg):
 
             model.to(device)
             criterion = LabelSmoothingCrossEntropy(0.1)
-            criterion_2 = TripletLoss(device=torch.device('cpu'))
+            criterion_2 = TripletLoss(device)
 
             optimizer = eval(cfg['optimizer'])(model.parameters(), lr=float(cfg['lr']))
 

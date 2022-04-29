@@ -5,6 +5,13 @@ probs = np.load(
 max_value = list(map(lambda x: np.max(x), probs))
 low_confidence = 0
 for i in max_value:
-    if i < 0.3:
+    if i < 0.9:
         low_confidence += 1
 print(low_confidence)
+
+
+
+
+
+
+

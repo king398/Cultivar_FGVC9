@@ -138,3 +138,44 @@ class Cultivar_data_inference_tta(Dataset):
             image_7 = self.transform_7(image=image)['image']
 
         return image_1, image_2, image_3, image_4, image_5, image_6, image_7
+
+
+class Cultivar_data_tta_oof(Dataset):
+    def __init__(self, image_path, targets, ids, transform=None, transform_2=None, transform_3=None, transform_4=None,
+                 transform_5=None, transform_6=None, transform_7=None):
+        self.image_path = image_path
+        self.targets = targets
+        self.ids = ids
+        self.transform = transform
+        self.transform_2 = transform_2
+        self.transform_3 = transform_3
+        self.transform_4 = transform_4
+        self.transform_5 = transform_5
+        self.transform_6 = transform_6
+        self.transform_7 = transform_7
+
+    def __len__(self):
+        return len(self.image_path)
+
+    def __getitem__(self, idx):
+        image = cv2.imread(self.image_path[idx])
+        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGB)
+        image = np.array(image)
+
+        if self.transform is not None:
+            image_1 = self.transform(image=image)['image']
+        if self.transform_2 is not None:
+            image_2 = self.transform_2(image=image)['image']
+        if self.transform_3 is not None:
+            image_3 = self.transform_3(image=image)['image']
+        if self.transform_4 is not None:
+            image_4 = self.transform_4(image=image)['image']
+        if self.transform_5 is not None:
+            image_5 = self.transform_5(image=image)['image']
+        if self.transform_6 is not None:
+            image_6 = self.transform_6(image=image)['image']
+        if self.transform_7 is not None:
+            image_7 = self.transform_7(image=image)['image']
+        label = self.targets[idx]
+        id = self.ids[idx]
+        return image_1, image_2, image_3, image_4, image_5, image_6, image_7, label, id

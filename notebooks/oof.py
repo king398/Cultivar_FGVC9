@@ -41,12 +41,17 @@ def main(cfg):
         valid_path = valid['file_path']
         valid_labels = valid['cultivar']
         valid_id = valid['image']
-        valid_dataset = Cultivar_data_oof(image_path=valid_path,
-                                          cfg=cfg,
-                                          targets=valid_labels,
-                                          ids=valid_id,
-                                          transform=get_valid_transforms(cfg['image_size'])
-                                          )
+        valid_dataset = Cultivar_data_tta_oof(image_path=valid_path,
+                                              targets=valid_labels,
+                                              ids=valid_id,
+                                              transform=get_test_transforms(cfg['image_size']),
+                                              transform_2=get_test_transforms_flip(cfg['image_size']),
+                                              transform_3=get_test_transforms_shift_scale(cfg['image_size']),
+                                              transform_4=get_test_transforms_brightness(cfg['image_size']),
+                                              transform_5=get_test_transforms_all(cfg['image_size']),
+                                              transform_6=get_test_transforms_vflip(cfg['image_size']),
+                                              transform_7=get_test_transforms_crop(cfg['image_size'])
+                                              )
         val_loader = DataLoader(
             valid_dataset, batch_size=cfg['batch_size'], shuffle=False,
             num_workers=cfg['num_workers'], pin_memory=cfg['pin_memory']
@@ -55,7 +60,6 @@ def main(cfg):
         model = BaseModelEffNet(cfg)
         model = model.to(device)
         model.load_state_dict(torch.load(path[0]))
-        model = tta.ClassificationTTAWrapper(model, tta.aliases.ten_crop_transform(512, 512))
 
         ids, target, preds, probablity, accuracy = oof_fn(val_loader, model, cfg)
         print(f"Fold: {fold} Accuracy: {accuracy}")
@@ -76,7 +80,7 @@ def main(cfg):
         {'image_id': oof_ids, 'cultivar': oof_targets_real, 'prediction': oof_pred_real, 'cultivar_int': oof_preds,
          'target_int': oof_targets})
     oof_df.to_csv(cfg['oof_file_path'], index=False)
-    np.save(cfg['oof_probablity_path'], oof_preds)
+    np.save(cfg['oof_probablity_path'], oof_probablity)
     print(f"Mean Accuracy: {np.mean(acc_list)}")
 
 

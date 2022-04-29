@@ -258,3 +258,47 @@ def inference_fn_tta(test_loader, model, cfg):
             gc.collect()
 
     return preds
+
+
+def oof_fn(test_loader, model, cfg):
+    device = torch.device(cfg['device'])
+    model.eval()
+    stream = tqdm(test_loader)
+    ids = []
+    target = []
+    preds = None
+    probablitys = None
+    accuracy_list = []
+    with torch.no_grad():
+        for i, (images_1, images_2, images_3, images_4, images_5, images_6, images_7, label, id) in enumerate(stream,
+                                                                                                              start=1):
+            ids.extend(id)
+            target.extend(label)
+            images_1 = images_1.to(device, non_blocking=True)
+            images_2 = images_2.to(device, non_blocking=True)
+            images_3 = images_3.to(device, non_blocking=True)
+            images_4 = images_4.to(device, non_blocking=True)
+            images_5 = images_5.to(device, non_blocking=True)
+            images_6 = images_6.to(device, non_blocking=True)
+            images_7 = images_7.to(device, non_blocking=True)
+            label = label.to(device, non_blocking=True).long()
+            with autocast():
+                output_1 = model(images_1).softmax(1).detach().cpu() / 7
+                output_2 = model(images_2).softmax(1).detach().cpu() / 7
+                output_3 = model(images_3).softmax(1).detach().cpu() / 7
+                output_4 = model(images_4).softmax(1).detach().cpu() / 7
+                output_5 = model(images_5).softmax(1).detach().cpu() / 7
+                output_6 = model(images_6).softmax(1).detach().cpu() / 7
+                output_7 = model(images_7).softmax(1).detach().cpu() / 7
+            probablity = output_1 + output_2 + output_3 + output_4 + output_5 + output_6 + output_7
+            if probablitys is None:
+                probablitys = probablity
+            else:
+                torch.cat((probablitys, probablity))
+            pred = torch.argmax(probablity, 1).detach().cpu()
+            if preds is None:
+                preds = pred
+            else:
+                preds = torch.cat((preds, pred))
+            accuracy_list.append(accuracy_score(pred, label))
+    return ids, target, preds.detach().cpu().numpy(), probablitys.detach().cpu().numpy(), np.mean(accuracy_list)

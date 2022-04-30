@@ -61,7 +61,7 @@ def main(cfg):
         model = model.to(device)
         model.load_state_dict(torch.load(path[0]))
 
-        ids, target, preds, probablity, accuracy = oof_fn(val_loader, model, cfg)
+        ids, target, preds, probablity, accuracy = oof_fn_tta(val_loader, model, cfg)
         print(f"Fold: {fold} Accuracy: {accuracy}")
         oof_preds = np.concatenate([oof_preds, preds]) if oof_preds is not None else preds
         oof_probablity = np.concatenate([oof_probablity, probablity]) if oof_probablity is not None else probablity

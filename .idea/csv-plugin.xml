@@ -59,6 +59,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="/oof/tf_efficientnetv2_m_tta_oof.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/submissions/baseline_resnet34_submission.csv">
           <value>
             <Attribute>
@@ -221,6 +228,13 @@
           </value>
         </entry>
         <entry key="/submissions/tta/effnetv2_b3_cutmix_40epoch_diffmeanstd_640_7xtta_submission.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/submissions/tta/effnetv2_m_25epoch_probablity.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />

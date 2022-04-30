@@ -6,6 +6,7 @@ from PIL import Image
 
 
 class Cultivar_data(Dataset):
+
     def __init__(self, image_path, cfg, targets, transform=None):
         self.image_path = image_path
         self.cfg = cfg

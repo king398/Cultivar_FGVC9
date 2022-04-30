@@ -33,6 +33,14 @@ def accuracy_score(output, labels):
     return accuracy
 
 
+def accuracy_score_no_softmax(output, labels):
+    output = output.detach().cpu()
+    labels = labels.detach().cpu()
+    accuracy = (output == labels).float().mean()
+    accuracy = accuracy.detach().cpu().numpy()
+    return accuracy
+
+
 class MetricMonitor:
     def __init__(self, float_precision=3):
         self.float_precision = float_precision
@@ -104,3 +112,27 @@ def alpha_weight(step):
         return af
     else:
         return ((step - T1) / (T2 - T1)) * af
+
+
+def search_layer(module, layer_type, reverse=True):
+    if isinstance(module, layer_type):
+        return module
+
+    if not hasattr(module, 'children'):
+        return None
+
+    children = list(module.children())
+    if reverse:
+        children = reversed(children)
+    # search for the first occurence recursively
+    for child in children:
+        res = search_layer(child, layer_type)
+        if res:
+            return res
+    return None
+
+
+def calculation():
+    a = 3
+    b = 4
+    print(a + b)

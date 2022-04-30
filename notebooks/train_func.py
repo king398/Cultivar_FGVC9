@@ -9,6 +9,18 @@ from loss import *
 
 
 def train_fn(train_loader, model, criterion, criterion_2, optimizer, epoch, cfg, scheduler=None):
+    """Train a model on the given image using the given parameters .
+
+    Args:
+        train_loader ([DataLoader]): A pytorch dataloader that containes train images and returns images,target
+        model ([Module]): A pytorch model
+        criterion ([type]): Pytorch loss  
+        criterion_2 ([type]): Pytorch loss
+        optimizer ([type]): [description]
+        epoch ([type]): [description]
+        cfg ([type]): [description]
+        scheduler ([type], optional): [description]. Defaults to None.
+    """
     device = torch.device(cfg['device'])
     metric_monitor = MetricMonitor()
     snapmix_loss = SnapMixLoss()
@@ -260,7 +272,7 @@ def inference_fn_tta(test_loader, model, cfg):
     return preds
 
 
-def oof_fn(test_loader, model, cfg):
+def oof_fn_tta(test_loader, model, cfg):
     device = torch.device(cfg['device'])
     model.eval()
     stream = tqdm(test_loader)
@@ -291,14 +303,16 @@ def oof_fn(test_loader, model, cfg):
                 output_6 = model(images_6).softmax(1).detach().cpu() / 7
                 output_7 = model(images_7).softmax(1).detach().cpu() / 7
             probablity = output_1 + output_2 + output_3 + output_4 + output_5 + output_6 + output_7
+
             if probablitys is None:
                 probablitys = probablity
             else:
-                torch.cat((probablitys, probablity))
+                probablitys = torch.cat((probablity, probablitys))
             pred = torch.argmax(probablity, 1).detach().cpu()
             if preds is None:
                 preds = pred
             else:
                 preds = torch.cat((preds, pred))
-            accuracy_list.append(accuracy_score(pred, label))
+
+            accuracy_list.append(accuracy_score_no_softmax(pred, label))
     return ids, target, preds.detach().cpu().numpy(), probablitys.detach().cpu().numpy(), np.mean(accuracy_list)

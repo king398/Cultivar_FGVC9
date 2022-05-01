@@ -70,14 +70,13 @@ def main(cfg):
                 model = BaseModelEffNet(cfg)
 
             model.to(device)
-            criterion = LabelSmoothingCrossEntropy(0.1)
-            criterion_2 = TripletLoss(device)
+            criterion = nn.CrossEntropyLoss(label_smoothing=0.1)
 
             optimizer = eval(cfg['optimizer'])(model.parameters(), lr=float(cfg['lr']))
 
             scheduler = get_scheduler(optimizer, cfg, train_loader)
             for epoch in range(cfg['epochs']):
-                train_fn(train_loader, model, criterion, criterion_2, optimizer, epoch, cfg, scheduler)
+                train_fn(train_loader, model, criterion, optimizer, epoch, cfg, scheduler)
                 accuracy = validate_fn(val_loader, model, criterion, epoch, cfg)
                 if accuracy > best_accuracy:
                     best_accuracy = accuracy

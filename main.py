@@ -13,7 +13,6 @@ from dataset import cultivar, loader_fold
 from trip_loss import *
 from begin import *
 
-
 parser = argparse.ArgumentParser()
 parser.add_argument('--note', default='xx', type=str)
 parser.add_argument('--seed', default=42, type=int)
@@ -37,7 +36,7 @@ class our_model(nn.Module):
     def __init__(self, model_name, num_classes, dim1=1024, pretrained=True):
         super(our_model, self).__init__()
         self.num_classes = num_classes
-        self.model = timm.create_model(model_name,  pretrained=pretrained)
+        self.model = timm.create_model(model_name, pretrained=pretrained)
         self.in_features = self.model.get_classifier().in_features
 
         self.model = nn.Sequential(*list(self.model.children())[:-1])
@@ -68,10 +67,10 @@ class our_model(nn.Module):
 
 
 class our_model1(nn.Module):
-    def __init__(self, model_name, num_classes, dim1=1024, pretrained=True):
+    def __init__(self, cfg, dim1=1280, pretrained=True):
         super(our_model1, self).__init__()
-        self.num_classes = num_classes
-        self.model = timm.create_model(model_name,  pretrained=pretrained)
+        self.num_classes = cfg['target_size']
+        self.model = timm.create_model(cfg['model'], pretrained=pretrained)
         self.in_features = self.model.get_classifier().in_features
 
         self.model = nn.Sequential(*list(self.model.children())[:-1])
@@ -143,7 +142,8 @@ def train_phase(model, train_loader, optimizer, epoch, args, fold_i, num_per_cls
     sys.stdout.write('\n')
     train_loss = train_loss / len(train_loader)
     pprint('Fold: [%2d/%2d]\t | Epoch: [%2d/%2d]\t  |  avg. train_acc:%.4f\t  train_loss:%.4f\t lr: %.10f' % (
-    fold_i + 1, args.k_fold, epoch + 1, args.num_epoch, metric.compute(), train_loss, optimizer.param_groups[0]['lr']), test_log)
+        fold_i + 1, args.k_fold, epoch + 1, args.num_epoch, metric.compute(), train_loss,
+        optimizer.param_groups[0]['lr']), test_log)
 
     metric.reset()
 
@@ -216,13 +216,16 @@ if __name__ == '__main__':
         print(num_per_cls)
 
         # =============================== load dataloader ============================
-        train_dataset = cultivar(args, mode='train', aug_mode=args.aug_mode, image_paths=train_image_path, labels=train_labels)
+        train_dataset = cultivar(args, mode='train', aug_mode=args.aug_mode, image_paths=train_image_path,
+                                 labels=train_labels)
         data_source = [tuple([train_image_path[i], train_labels[i], i]) for i in range(len(train_labels))]
         train_sampler = RandomIdentitySampler(data_source, num_instances=4, batch_size=args.bs)
-        train_loader = DataLoader(train_dataset, batch_size=args.bs, sampler=train_sampler, num_workers=args.num_worker, pin_memory=True)
+        train_loader = DataLoader(train_dataset, batch_size=args.bs, sampler=train_sampler, num_workers=args.num_worker,
+                                  pin_memory=True)
 
         val_dataset = cultivar(args, mode='val', aug_mode=args.aug_mode, image_paths=val_image_path, labels=val_labels)
-        val_loader = DataLoader(val_dataset, batch_size=args.bs, shuffle=False, num_workers=args.num_worker,  pin_memory=True)
+        val_loader = DataLoader(val_dataset, batch_size=args.bs, shuffle=False, num_workers=args.num_worker,
+                                pin_memory=True)
 
         # =============================== load our_model ============================
         model = our_model1(args.model_name, num_classes=args.num_classes, pretrained=True)
@@ -243,13 +246,17 @@ if __name__ == '__main__':
 
         optimizer = torch.optim.Adam(model.parameters(), lr=args.lr)
         # sch_lr = torch.optim.lr_scheduler.CosineAnnealingLR(optimizer, T_max=args.num_epoch + 1, eta_min=1e-7)
-        schedule_lr = torch.optim.lr_scheduler.OneCycleLR(optimizer, epochs=args.num_epoch, steps_per_epoch=args.steps_per_epoch,
-                               max_lr=args.max_lr, pct_start=args.pct_start, div_factor=args.div_factor, final_div_factor=args.final_div_factor)
+        schedule_lr = torch.optim.lr_scheduler.OneCycleLR(optimizer, epochs=args.num_epoch,
+                                                          steps_per_epoch=args.steps_per_epoch,
+                                                          max_lr=args.max_lr, pct_start=args.pct_start,
+                                                          div_factor=args.div_factor,
+                                                          final_div_factor=args.final_div_factor)
         metric = torchmetrics.Accuracy(threshold=0.5, num_classes=args.num_classes).to(device)
 
         pprint('--load_path-- | {}'.format(test_path), test_log)
         pprint(str(args), test_log)
-        pprint('Fold: [%2d/%2d]\t | train num: %d\t | val num: %d\t \n' % (fold_i + 1, args.k_fold, len(train_image_path), len(val_image_path)), test_log)
+        pprint('Fold: [%2d/%2d]\t | train num: %d\t | val num: %d\t \n' % (
+            fold_i + 1, args.k_fold, len(train_image_path), len(val_image_path)), test_log)
         # ============================ Train ===============================
         for epoch in range(args.num_epoch):
             model.train()

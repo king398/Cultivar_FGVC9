@@ -8,7 +8,7 @@ from augmentations import *
 from loss import *
 
 
-def train_fn(train_loader, model, criterion, criterion_2, optimizer, epoch, cfg, scheduler=None):
+def train_fn(train_loader, model, criterion, optimizer, epoch, cfg, scheduler=None):
     """Train a model on the given image using the given parameters .
 
     Args:

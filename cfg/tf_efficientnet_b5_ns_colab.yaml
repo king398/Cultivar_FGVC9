@@ -27,7 +27,7 @@ T_max: 5
 T_mult: 1
 min_lr: 1e-7
 max_lr: 1e-3
-lr: 1e-4
+lr: 3e-4
 weight_decay: 1e-6
 target_size: 100
 device: cuda

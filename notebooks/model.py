@@ -148,10 +148,10 @@ def set_batchnorm_eval(m):
 
 
 class BaseModelEffNet(nn.Module):
-    def __init__(self, model_name, num_classes, dim1=1024, pretrained=True):
+    def __init__(self, cfg, dim1=1024, pretrained=True):
         super(BaseModelEffNet, self).__init__()
-        self.num_classes = num_classes
-        self.model = timm.create_model(model_name, pretrained=pretrained)
+        self.num_classes = cfg['target_size']
+        self.model = timm.create_model(cfg['model'], pretrained=pretrained)
         self.in_features = self.model.get_classifier().in_features
 
         self.model = nn.Sequential(*list(self.model.children())[:-1])

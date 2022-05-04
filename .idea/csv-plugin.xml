@@ -269,6 +269,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="/submissions/tta/tf_efficientnetv2_m_896_cutmix_h_1(is896 7xTTa pseudo_label)__wo_out.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/submissions/tta/tf_effnetv2_b3_cutmix_35_own_meanstd_submission.csv">
           <value>
             <Attribute>

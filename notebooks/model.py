@@ -148,42 +148,20 @@ def set_batchnorm_eval(m):
 
 
 class BaseModelEffNet(nn.Module):
-    def __init__(self, cfg, dim1=1024, pretrained=True):
-        super(BaseModelEffNet, self).__init__()
-        self.num_classes = cfg['target_size']
-        self.model = timm.create_model(cfg['model'], pretrained=pretrained)
-        self.in_features = self.model.get_classifier().in_features
 
-        self.model = nn.Sequential(*list(self.model.children())[:-1])
+    def __init__(self, cfg):
+        super().__init__()
+        self.cfg = cfg
+        self.model = timm.create_model(self.cfg['model'], pretrained=self.cfg['pretrained'],
+                                       in_chans=self.cfg['in_channels'],
+                                       num_classes=100)
+        n_features = self.model.classifier.in_features
+        self.model.head = nn.Linear(n_features, cfg['target_size'])
 
-        self.pooling = GeM()
-        self.fc1 = nn.Linear(self.in_features, self.in_features)
-        self.bn1 = nn.BatchNorm1d(self.in_features)
-        self.relu = nn.LeakyReLU()
-        self.fc2 = nn.Linear(self.in_features, dim1)
-        self.bn2 = nn.BatchNorm1d(dim1)
-        self.classifier = nn.Linear(dim1, self.num_classes)
+    def forward(self, x):
+        output = self.model(x)
 
-    def extract(self, image):
-        bs = image.size()[0]
-        x = self.model(image)
-        x = self.pooling(x).view(bs, -1)
-
-        x = self.fc1(x)
-        x = self.bn1(x)
-        x = self.relu(x)
-        x = self.fc2(x)
-        feature = self.bn2(x)
-        return feature
-
-    def forward(self, image, ret_f=False):
-        feature = self.extract(image)
-        feature = self.relu(feature)
-        logits = self.classifier(feature)
-        if ret_f:
-            return logits, feature
-        else:
-            return logits
+        return output
 
 
 class SelectAdaptivePool2d(nn.Module):

@@ -66,6 +66,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="/plot_files/ensemble.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/submissions/baseline_resnet34_submission.csv">
           <value>
             <Attribute>

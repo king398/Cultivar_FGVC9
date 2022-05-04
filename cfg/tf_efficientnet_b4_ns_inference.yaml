@@ -1,4 +1,4 @@
-model: tf_efficientnetv2_m
+model: tf_efficientnet_b3_ns
 batch_size: 16
 image_size: 640
 seed: 42

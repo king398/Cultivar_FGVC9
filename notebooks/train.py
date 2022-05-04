@@ -72,7 +72,7 @@ def main(cfg):
 
             model.to(device)
 
-            criterion = nn.CrossEntropyLoss(label_smoothing=0.1, weight=class_weight)
+            criterion = nn.CrossEntropyLoss()
 
             optimizer = eval(cfg['optimizer'])(model.parameters(), lr=float(cfg['lr']))
 

@@ -247,3 +247,4 @@ class TripletLoss(nn.Module):
 
     def forward(self, input, target, **kwargs):
         return TripletSemiHardLoss(target, input, self.device)
+    

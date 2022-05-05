@@ -1,4 +1,4 @@
-model: tf_efficientnet_b3_ns
+model: resnet34
 batch_size: 16
 image_size: 640
 seed: 42

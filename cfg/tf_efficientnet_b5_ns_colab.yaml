@@ -1,4 +1,4 @@
-model: eca_nfnet_l0
+model: dm_nfnet_f2
 batch_size: 16
 image_size: 512
 seed: 42

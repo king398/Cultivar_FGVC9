@@ -52,10 +52,3 @@ for i in range(len(outputs)):
 
 x = torch.from_numpy(arr)
 x = torch.softmax(x, dim=1).numpy()
-
-p = 0
-for i in x:
-    i = np.max(i)
-    if i < 0.3:
-        p += 1
-print(p)

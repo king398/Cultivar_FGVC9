@@ -28,8 +28,7 @@ def main(cfg):
     label_encoder = preprocessing.LabelEncoder()
     label_encoder.classes_ = np.load(cfg['label_encoder_path'], allow_pickle=True)
     train_df['cultivar'] = label_encoder.fit_transform(train_df['cultivar'])
-    class_weight = torch.tensor(
-        compute_class_weight('balanced', classes=train_df['cultivar'].unique(), y=train_df['cultivar'].values))
+
     for fold, (trn_index, val_index) in enumerate(skf.split(train_df, train_df.cultivar)):
 
         if fold in cfg['folds']:
@@ -68,7 +67,7 @@ def main(cfg):
             if cfg['snapmix']:
                 model = Snapmix_net_effnet(cfg)
             else:
-                model = BaseModelEffNet(cfg)
+                model = BaseModel(cfg)
 
             model.to(device)
 

@@ -487,13 +487,11 @@ def augment_list():  # 16 oeprations and their ranges
 
     # https://github.com/tensorflow/tpu/blob/8462d083dd89489a79e3200bcc8d4063bf362186/models/official/efficientnet/autoaugment.py#L505
     l = [
-        (AutoContrast, 0, 1),
         (Equalize, 0, 1),
         (Invert, 0, 1),
         (Rotate, 0, 30),
         (Posterize, 0, 4),
-        (Solarize, 0, 256),
-        (SolarizeAdd, 0, 110),
+
         (Color, 0.1, 1.9),
         (Contrast, 0.1, 1.9),
         (Brightness, 0.1, 1.9),
@@ -556,18 +554,21 @@ class CutoutDefault(object):
 
 
 class RandAugment:
-    def __init__(self, n, m, dim):
+    def __init__(self, n, m, dim, ):
         self.n = n
         self.m = m  # [0, 30]
         self.augment_list = augment_list()
         self.dim = dim
+        self.aug = get_valid_transforms(self.dim)
 
     def __call__(self, img):
         img = cv2.resize(img, (self.dim, self.dim))
+        img = Image.fromarray(img)
 
         ops = random.choices(self.augment_list, k=self.n)
         for op, minval, maxval in ops:
             val = (float(self.m) / 30) * float(maxval - minval) + minval
             img = op(img, val)
-
+        img = np.array(img)
+        img = self.aug(image=img)
         return img

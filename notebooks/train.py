@@ -69,7 +69,6 @@ def main(cfg):
                 elif epoch >= 20:
                     cfg['image_size'] = 768
                     cfg['batch_size_actual'] = cfg['batch_size'] / 2
-                print(cfg['batch_size_actual'])
                 train_dataset = Cultivar_data(image_path=train_path,
                                               cfg=cfg,
                                               targets=train_labels,

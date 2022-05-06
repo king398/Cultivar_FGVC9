@@ -1,8 +1,8 @@
-model: dm_nfnet_f2
+model: dm_nfnet_f0
 batch_size: 16
 image_size: 512
 seed: 42
-pretrained: true
+pretrained: false
 num_workers: 4
 pin_memory: true
 

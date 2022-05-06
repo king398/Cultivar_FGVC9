@@ -68,7 +68,7 @@ class MetricMonitor:
         )
 
 
-def get_scheduler(optimizer, scheduler_params, train_loader):
+def get_scheduler(optimizer, scheduler_params, train_loader=None):
     if scheduler_params['scheduler_name'] == 'CosineAnnealingWarmRestarts':
         schedulers = CosineAnnealingWarmRestarts(
             optimizer,

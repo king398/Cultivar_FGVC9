@@ -1,4 +1,3 @@
-
 from tqdm.auto import tqdm
 import torch
 from torch.cuda.amp import autocast
@@ -9,7 +8,7 @@ from augmentations import *
 from loss import *
 
 
-def train_fn(train_loader, model, criterion, optimizer, epoch, cfg, accelerator, scheduler=None, ):
+def train_fn(train_loader, model, criterion, optimizer, epoch, cfg, scheduler=None):
     """Train a model on the given image using the given parameters .
     Args:
         train_loader ([DataLoader]): A pytorch dataloader that containes train images and returns images,target
@@ -21,6 +20,7 @@ def train_fn(train_loader, model, criterion, optimizer, epoch, cfg, accelerator,
         cfg ([type]): [description]
         scheduler ([type], optional): [description]. Defaults to None.
     """
+    device = torch.device(cfg['device'])
     metric_monitor = MetricMonitor()
     snapmix_loss = SnapMixLoss()
     model.train()
@@ -33,17 +33,24 @@ def train_fn(train_loader, model, criterion, optimizer, epoch, cfg, accelerator,
     for i, (images, target) in enumerate(stream, start=1):
         if cfg['mixup']:
             images, target_a, target_b, lam = mixup_data(images, target, cfg['mixup_alpha'])
-
+            images = images.to(device, non_blocking=True, dtype=torch.float)
+            target_a = target_a.to(device)
+            target_b = target_b.to(device)
         elif cfg['cutmix']:
             images, target_a, target_b, lam = cutmix(images, target, cfg['cutmix_alpha'])
-
+            images = images.to(device, non_blocking=True, dtype=torch.float)
+            target_a = target_a.to(device)
+            target_b = target_b.to(device)
         elif cfg['snapmix']:
             images, target_a, target_b, lam_a, lam_b = snapmix(images.cuda(), target, cfg['snapmix_alpha'], model)
-
+            images = images.to(device, non_blocking=True, dtype=torch.float)
+            target_a = target.to(device)
+            target_b = target_b.to(device)
 
 
         else:
-            target = target.long()
+            images = images.to(device, non_blocking=True)
+            target = target.to(device).long()
 
         with autocast():
             output = model(images).float()
@@ -61,7 +68,7 @@ def train_fn(train_loader, model, criterion, optimizer, epoch, cfg, accelerator,
 
         metric_monitor.update("Loss", loss.item())
         metric_monitor.update("Accuracy", accuracy)
-        accelerator.backward(loss)
+        loss.backward()
         optimizer.step()
         if scheduler is not None:
             scheduler.step()
@@ -89,14 +96,17 @@ def pseudo_fn(pseudo_loader, train_loader, model, criterion, optimizer, epoch, c
         unlabeled_loss = alpha_weight(100) * criterion(output_unlabeled, pseudo_labeled)
 
 
-def validate_fn(val_loader, model, criterion, epoch, cfg, accelerator):
+def validate_fn(val_loader, model, criterion, epoch, cfg):
+    device = torch.device(cfg['device'])
     metric_monitor = MetricMonitor()
     model.eval()
     stream = tqdm(val_loader)
     accuracy_list = []
     with torch.no_grad():
         for i, (images, target) in enumerate(stream, start=1):
-            target = target.long()
+            images = images.to(device, non_blocking=True)
+
+            target = target.to(device, non_blocking=True).long()
             with autocast():
                 output = model(images).float()
             loss = criterion(output, target)

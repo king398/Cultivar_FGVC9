@@ -7,8 +7,6 @@ import yaml
 from sklearn import preprocessing
 from sklearn.model_selection import StratifiedKFold
 from torch.optim import *
-from accelerate import Accelerator
-
 # Function Created by me
 from dataset import *
 from model import *
@@ -25,8 +23,7 @@ def main(cfg):
     train_df['file_path'] = train_df['image'].apply(lambda x: return_filpath(x, folder=cfg['train_dir']))
     seed_everything(cfg['seed'])
     gc.enable()
-    accelerator = Accelerator()
-    device = accelerator.device
+    device = return_device()
     skf = StratifiedKFold(n_splits=cfg['n_fold'], random_state=cfg['seed'], shuffle=True)
     label_encoder = preprocessing.LabelEncoder()
     label_encoder.classes_ = np.load(cfg['label_encoder_path'], allow_pickle=True)
@@ -48,23 +45,6 @@ def main(cfg):
             valid_path = valid['file_path']
             valid_labels = valid['cultivar']
 
-            train_dataset = Cultivar_data(image_path=train_path,
-                                          cfg=cfg,
-                                          targets=train_labels,
-                                          transform=get_train_transforms(cfg['image_size']))
-            valid_dataset = Cultivar_data(image_path=valid_path,
-                                          cfg=cfg,
-                                          targets=valid_labels,
-                                          transform=get_valid_transforms(cfg['image_size']))
-            train_loader = DataLoader(
-                train_dataset, batch_size=cfg['batch_size'], shuffle=True,
-                num_workers=cfg['num_workers'], pin_memory=cfg['pin_memory']
-            )
-
-            val_loader = DataLoader(
-                valid_dataset, batch_size=cfg['batch_size'], shuffle=False,
-                num_workers=cfg['num_workers'], pin_memory=cfg['pin_memory']
-            )
             if cfg['triplet']:
                 model = TripletModel(cfg)
             if cfg['snapmix']:
@@ -78,29 +58,53 @@ def main(cfg):
 
             optimizer = eval(cfg['optimizer'])(model.parameters(), lr=float(cfg['lr']))
 
-            scheduler = get_scheduler(optimizer, cfg, train_loader)
-            train_loader, model, optimizer, scheduler = accelerator.prepare(train_loader, model, optimizer, scheduler)
-
+            scheduler = get_scheduler(optimizer, cfg)
             for epoch in range(cfg['epochs']):
-                train_fn(train_loader, model, criterion, optimizer, epoch, cfg, scheduler, accelerator)
+                if epoch <= 5:
+                    cfg['image_size'] = 256
+                    cfg['batch_size'] = cfg['batch_size'] * 4
+                elif 5 < epoch < 20:
+                    cfg['image_size'] = 512
+                    cfg['batch_size'] = cfg['batch_size'] / 4
+                elif epoch >= 20:
+                    cfg['image_size'] = 768
+                    cfg['batch_size'] = cfg['batch_size'] / 2
+                train_dataset = Cultivar_data(image_path=train_path,
+                                              cfg=cfg,
+                                              targets=train_labels,
+                                              transform=get_train_transforms(cfg['image_size']))
+                valid_dataset = Cultivar_data(image_path=valid_path,
+                                              cfg=cfg,
+                                              targets=valid_labels,
+                                              transform=get_valid_transforms(cfg['image_size']))
+                train_loader = DataLoader(
+                    train_dataset, batch_size=cfg['batch_size'], shuffle=True,
+                    num_workers=cfg['num_workers'], pin_memory=cfg['pin_memory']
+                )
+
+                val_loader = DataLoader(
+                    valid_dataset, batch_size=cfg['batch_size'], shuffle=False,
+                    num_workers=cfg['num_workers'], pin_memory=cfg['pin_memory']
+                )
+                train_fn(train_loader, model, criterion, optimizer, epoch, cfg, scheduler)
                 accuracy = validate_fn(val_loader, model, criterion, epoch, cfg)
                 if accuracy > best_accuracy:
                     best_accuracy = accuracy
                     if best_model_name is not None:
                         os.remove(best_model_name)
-                    accelerator.save(model.state_dict(),
-                                     f"{cfg['model_dir']}/{cfg['model']}_fold{fold}_epoch{epoch}_accuracy_{round(accuracy, 4)}.pth")
+                    torch.save(model.state_dict(),
+                               f"{cfg['model_dir']}/{cfg['model']}_fold{fold}_epoch{epoch}_accuracy_{round(accuracy, 4)}.pth")
                     best_model_name = f"{cfg['model_dir']}/{cfg['model']}_fold{fold}_epoch{epoch}_accuracy_{round(accuracy, 4)}.pth"
+                del train_dataset
+                del valid_dataset
+                del train_loader
+                del val_loader
 
             gc.collect()
             torch.cuda.empty_cache()
             del model
             del optimizer
             del scheduler
-            del train_dataset
-            del valid_dataset
-            del train_loader
-            del val_loader
 
 
 if __name__ == '__main__' and '__file__' in globals():

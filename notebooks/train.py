@@ -65,7 +65,7 @@ def main(cfg):
                     cfg['batch_size_actual'] = cfg['batch_size'] * 4
                 elif 5 < epoch < 20:
                     cfg['image_size'] = 512
-                    cfg['batch_size_actual'] = cfg['batch_size'] / 4
+                    cfg['batch_size_actual'] = cfg['batch_size']
                 elif epoch >= 20:
                     cfg['image_size'] = 768
                     cfg['batch_size_actual'] = cfg['batch_size'] / 2

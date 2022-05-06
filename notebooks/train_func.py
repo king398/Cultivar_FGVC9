@@ -20,6 +20,8 @@ def train_fn(train_loader, model, criterion, optimizer, epoch, cfg, scheduler=No
         cfg ([type]): [description]
         scheduler ([type], optional): [description]. Defaults to None.
     """
+    gc.collect()
+    torch.cuda.empty_cache()
     device = torch.device(cfg['device'])
     metric_monitor = MetricMonitor()
     snapmix_loss = SnapMixLoss()

@@ -47,7 +47,7 @@ def main(cfg):
 
             if cfg['triplet']:
                 model = TripletModel(cfg)
-            if cfg['snapmix']:
+            elif cfg['snapmix']:
                 model = Snapmix_net_effnet(cfg)
             else:
                 model = BaseModel(cfg)

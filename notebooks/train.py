@@ -99,6 +99,8 @@ def main(cfg):
                 del valid_dataset
                 del train_loader
                 del val_loader
+                gc.collect()
+                torch.cuda.empty_cache()
 
             gc.collect()
             torch.cuda.empty_cache()

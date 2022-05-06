@@ -20,6 +20,43 @@ def get_train_transforms(DIM):
             A.ShiftScaleRotate(shift_limit=0.1, scale_limit=0.1, rotate_limit=45, p=0.5),
             A.RandomBrightnessContrast(brightness_limit=0.2, contrast_limit=0.2, p=0.5),
             A.CoarseDropout(),
+
+            A.Normalize(
+                mean=[0.3511794, 0.37462908, 0.2873578],
+                std=[0.20823358, 0.2117826, 0.16226698],
+            ),
+
+            ToTensorV2(),
+        ]
+    )
+
+
+def get_train_transforms_easy(DIM):
+    return A.Compose(
+        [
+            A.RandomResizedCrop(height=DIM, width=DIM),
+            A.HorizontalFlip(),
+            A.VerticalFlip(),
+
+            A.Normalize(
+                mean=[0.3511794, 0.37462908, 0.2873578],
+                std=[0.20823358, 0.2117826, 0.16226698],
+            ),
+
+            ToTensorV2(),
+        ]
+    )
+
+
+def get_train_transforms_hard(DIM):
+    return A.Compose(
+        [
+            A.RandomResizedCrop(height=DIM, width=DIM),
+            A.HorizontalFlip(),
+            A.VerticalFlip(),
+            A.ShiftScaleRotate(shift_limit=0.1, scale_limit=0.1, rotate_limit=45, p=0.5),
+            A.RandomBrightnessContrast(brightness_limit=0.2, contrast_limit=0.2, p=0.5),
+            A.CoarseDropout(),
             A.GaussNoise(),
             A.Affine(),
             A.OpticalDistortion(),

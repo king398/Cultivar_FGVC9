@@ -62,13 +62,13 @@ def main(cfg):
             for epoch in range(cfg['epochs']):
                 if epoch <= 5:
                     cfg['image_size'] = 256
-                    cfg['batch_size'] = cfg['batch_size'] * 4
+                    cfg['batch_size_actual'] = cfg['batch_size'] * 4
                 elif 5 < epoch < 20:
                     cfg['image_size'] = 512
-                    cfg['batch_size'] = cfg['batch_size'] / 4
+                    cfg['batch_size_actual'] = cfg['batch_size'] / 4
                 elif epoch >= 20:
                     cfg['image_size'] = 768
-                    cfg['batch_size'] = cfg['batch_size'] / 2
+                    cfg['batch_size_actual'] = cfg['batch_size'] / 2
                 train_dataset = Cultivar_data(image_path=train_path,
                                               cfg=cfg,
                                               targets=train_labels,
@@ -78,12 +78,12 @@ def main(cfg):
                                               targets=valid_labels,
                                               transform=get_valid_transforms(cfg['image_size']))
                 train_loader = DataLoader(
-                    train_dataset, batch_size=cfg['batch_size'], shuffle=True,
+                    train_dataset, batch_size=cfg['batch_size_actual'], shuffle=True,
                     num_workers=cfg['num_workers'], pin_memory=cfg['pin_memory']
                 )
 
                 val_loader = DataLoader(
-                    valid_dataset, batch_size=cfg['batch_size'], shuffle=False,
+                    valid_dataset, batch_size=cfg['batch_size_actual'], shuffle=False,
                     num_workers=cfg['num_workers'], pin_memory=cfg['pin_memory']
                 )
                 train_fn(train_loader, model, criterion, optimizer, epoch, cfg, scheduler)

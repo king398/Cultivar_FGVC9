@@ -7,6 +7,8 @@ import yaml
 from sklearn import preprocessing
 from sklearn.model_selection import StratifiedKFold
 from torch.optim import *
+from accelerate import Accelerator
+
 # Function Created by me
 from dataset import *
 from model import *
@@ -23,7 +25,8 @@ def main(cfg):
     train_df['file_path'] = train_df['image'].apply(lambda x: return_filpath(x, folder=cfg['train_dir']))
     seed_everything(cfg['seed'])
     gc.enable()
-    device = return_device()
+    accelerator = Accelerator()
+    device = accelerator.device
     skf = StratifiedKFold(n_splits=cfg['n_fold'], random_state=cfg['seed'], shuffle=True)
     label_encoder = preprocessing.LabelEncoder()
     label_encoder.classes_ = np.load(cfg['label_encoder_path'], allow_pickle=True)
@@ -76,15 +79,17 @@ def main(cfg):
             optimizer = eval(cfg['optimizer'])(model.parameters(), lr=float(cfg['lr']))
 
             scheduler = get_scheduler(optimizer, cfg, train_loader)
+            train_loader, model, optimizer, scheduler = accelerator.prepare(train_loader, model, optimizer, scheduler)
+
             for epoch in range(cfg['epochs']):
-                train_fn(train_loader, model, criterion, optimizer, epoch, cfg, scheduler)
+                train_fn(train_loader, model, criterion, optimizer, epoch, cfg, scheduler, accelerator)
                 accuracy = validate_fn(val_loader, model, criterion, epoch, cfg)
                 if accuracy > best_accuracy:
                     best_accuracy = accuracy
                     if best_model_name is not None:
                         os.remove(best_model_name)
-                    torch.save(model.state_dict(),
-                               f"{cfg['model_dir']}/{cfg['model']}_fold{fold}_epoch{epoch}_accuracy_{round(accuracy, 4)}.pth")
+                    accelerator.save(model.state_dict(),
+                                     f"{cfg['model_dir']}/{cfg['model']}_fold{fold}_epoch{epoch}_accuracy_{round(accuracy, 4)}.pth")
                     best_model_name = f"{cfg['model_dir']}/{cfg['model']}_fold{fold}_epoch{epoch}_accuracy_{round(accuracy, 4)}.pth"
 
             gc.collect()

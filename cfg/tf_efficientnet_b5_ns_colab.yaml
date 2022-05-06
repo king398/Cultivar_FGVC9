@@ -1,8 +1,8 @@
-model: dm_nfnet_f0
-batch_size: 16
+model: seresnext50_32x4d
+batch_size: 24
 image_size: 512
 seed: 42
-pretrained: false
+pretrained: true
 num_workers: 4
 pin_memory: true
 
@@ -13,6 +13,7 @@ label_encoder_path: /content/classes.npy
 epochs: 25
 in_channels: 3
 folds:
+
   - 0
   - 1
   - 2
@@ -27,7 +28,7 @@ T_max: 5
 T_mult: 1
 min_lr: 1e-7
 max_lr: 1e-3
-lr: 3e-4
+lr: 1e-4
 weight_decay: 1e-6
 target_size: 100
 device: cuda

@@ -132,7 +132,7 @@ class BaseModel(nn.Module):
         self.model = timm.create_model(self.cfg['model'], pretrained=self.cfg['pretrained'],
                                        in_chans=self.cfg['in_channels'],
                                        num_classes=100)
-        n_features = self.model.head.fc.in_features
+        n_features = self.model.fc.in_features
         self.model.fc = nn.Linear(n_features, cfg['target_size'])
 
     def forward(self, x):

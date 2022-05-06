@@ -1,3 +1,4 @@
+
 from tqdm.auto import tqdm
 import torch
 from torch.cuda.amp import autocast
@@ -10,11 +11,10 @@ from loss import *
 
 def train_fn(train_loader, model, criterion, optimizer, epoch, cfg, scheduler=None):
     """Train a model on the given image using the given parameters .
-
     Args:
         train_loader ([DataLoader]): A pytorch dataloader that containes train images and returns images,target
         model ([Module]): A pytorch model
-        criterion ([type]): Pytorch loss  
+        criterion ([type]): Pytorch loss
         criterion_2 ([type]): Pytorch loss
         optimizer ([type]): [description]
         epoch ([type]): [description]

@@ -1,4 +1,4 @@
-model: cait_xxs24_384
+model: resnetv2_50x3_bitm
 batch_size: 24
 image_size: 512
 seed: 42

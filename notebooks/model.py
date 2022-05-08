@@ -132,6 +132,7 @@ class BaseModel(nn.Module):
         self.model = timm.create_model(self.cfg['model'], pretrained=self.cfg['pretrained'],
                                        in_chans=self.cfg['in_channels'],
                                        num_classes=100)
+        self.model = self.model.apply()
         n_features = self.model.head.in_features
         self.model.fc = nn.Linear(n_features, cfg['target_size'])
 
@@ -160,7 +161,6 @@ class BaseModelEffNet(nn.Module):
 
     def forward(self, x):
         output = self.model(x)
-
 
         return output
 

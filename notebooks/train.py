@@ -57,35 +57,27 @@ def main(cfg):
             criterion = nn.CrossEntropyLoss()
 
             optimizer = eval(cfg['optimizer'])(model.parameters(), lr=float(cfg['lr']))
+            train_dataset = Cultivar_data(image_path=train_path,
+                                          cfg=cfg,
+                                          targets=train_labels,
+                                          transform=get_train_transforms(cfg['image_size']))
+            valid_dataset = Cultivar_data(image_path=valid_path,
+                                          cfg=cfg,
+                                          targets=valid_labels,
+                                          transform=get_valid_transforms(cfg['image_size']))
+            train_loader = DataLoader(
+                train_dataset, batch_size=cfg['batch_size_actual'], shuffle=True,
+                num_workers=cfg['num_workers'], pin_memory=cfg['pin_memory']
+            )
+
+            val_loader = DataLoader(
+                valid_dataset, batch_size=cfg['batch_size_actual'], shuffle=False,
+                num_workers=cfg['num_workers'], pin_memory=cfg['pin_memory']
+            )
 
             scheduler = get_scheduler(optimizer, cfg)
             for epoch in range(cfg['epochs']):
-                if epoch <= 5:
-                    cfg['image_size'] = 256
-                    cfg['batch_size_actual'] = cfg['batch_size'] * 4
-                elif 5 < epoch < 20:
-                    cfg['image_size'] = 512
-                    cfg['batch_size_actual'] = cfg['batch_size']
-                elif epoch >= 20:
-                    cfg['image_size'] = 768
-                    cfg['batch_size_actual'] = cfg['batch_size'] / 2
-                train_dataset = Cultivar_data(image_path=train_path,
-                                              cfg=cfg,
-                                              targets=train_labels,
-                                              transform=get_train_transforms(cfg['image_size']))
-                valid_dataset = Cultivar_data(image_path=valid_path,
-                                              cfg=cfg,
-                                              targets=valid_labels,
-                                              transform=get_valid_transforms(cfg['image_size']))
-                train_loader = DataLoader(
-                    train_dataset, batch_size=cfg['batch_size_actual'], shuffle=True,
-                    num_workers=cfg['num_workers'], pin_memory=cfg['pin_memory']
-                )
 
-                val_loader = DataLoader(
-                    valid_dataset, batch_size=cfg['batch_size_actual'], shuffle=False,
-                    num_workers=cfg['num_workers'], pin_memory=cfg['pin_memory']
-                )
                 train_fn(train_loader, model, criterion, optimizer, epoch, cfg, scheduler)
                 accuracy = validate_fn(val_loader, model, criterion, epoch, cfg)
                 if accuracy > best_accuracy:
@@ -95,15 +87,16 @@ def main(cfg):
                     torch.save(model.state_dict(),
                                f"{cfg['model_dir']}/{cfg['model']}_fold{fold}_epoch{epoch}_accuracy_{round(accuracy, 4)}.pth")
                     best_model_name = f"{cfg['model_dir']}/{cfg['model']}_fold{fold}_epoch{epoch}_accuracy_{round(accuracy, 4)}.pth"
-                del train_dataset
-                del valid_dataset
-                del train_loader
-                del val_loader
+
                 gc.collect()
                 torch.cuda.empty_cache()
 
             gc.collect()
             torch.cuda.empty_cache()
+            del train_dataset
+            del valid_dataset
+            del train_loader
+            del val_loader
             del model
             del optimizer
             del scheduler

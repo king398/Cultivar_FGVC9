@@ -1,4 +1,4 @@
-model: seresnext50_32x4d
+model: cait_xxs24_384
 batch_size: 24
 image_size: 512
 seed: 42

@@ -54,7 +54,7 @@ def main(cfg):
 
             model.to(device)
 
-            criterion = nn.CrossEntropyLoss()
+            criterion = nn.CrossEntropyLoss(label_smoothing=0.2)
 
             optimizer = eval(cfg['optimizer'])(model.parameters(), lr=float(cfg['lr']))
             train_dataset = Cultivar_data(image_path=train_path,

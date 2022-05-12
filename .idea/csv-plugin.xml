@@ -38,6 +38,13 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="/oof/seresnext_50_tta_oof.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/oof/tf_efficientnet_b3_ns_mixup_20.csv">
           <value>
             <Attribute>
@@ -116,6 +123,13 @@
           </value>
         </entry>
         <entry key="/submissions/blend/effnetv2_b3_diffmean_augs_640_7x_probablity_tf_effnetv2_b3_cutmix_35_own_tta_640_probablity.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/submissions/blend/seresnext_50_25epoch_probablity__effnetv2_m_25epoch_probablity.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />
@@ -249,6 +263,13 @@
           </value>
         </entry>
         <entry key="/submissions/tta/ffnetv2_b3_cutmix_40_submission.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/submissions/tta/seresnext_50_25epoch_submission.csv">
           <value>
             <Attribute>
               <option name="separator" value="," />

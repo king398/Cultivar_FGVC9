@@ -1,9 +1,9 @@
-model: tf_efficientnetv2_m
+model: seresnext50_32x4d
 batch_size: 16
 image_size: 640
 seed: 42
 pretrained: false
-num_workers: 1
+num_workers: 3
 pin_memory: true
 
 train_dir: /Cultivar_FGVC9/data/archive/train
@@ -13,7 +13,7 @@ in_channels: 3
 
 target_size: 100
 device: cuda
-model_dir: /Cultivar_FGVC9/models/effnetv2_m_25epoch
+model_dir: /Cultivar_FGVC9/models/seresnext_50
 n_fold: 5
-oof_file_path: /Cultivar_FGVC9/oof/tf_efficientnetv2_m_tta_oof.csv
-oof_probablity_path: /Cultivar_FGVC9/oof/tf_efficientnetv2_m_tta_oof_probablity.npy
+oof_file_path: /Cultivar_FGVC9/oof/seresnext_50_tta_oof.csv
+oof_probablity_path: /Cultivar_FGVC9/oof/seresnext_50_probablity.npy

@@ -286,7 +286,7 @@ def oof_fn_tta(test_loader, model, cfg):
         for i, (images_1, images_2, images_3, images_4, images_5, images_6, images_7, label, id) in enumerate(stream,
                                                                                                               start=1):
             ids.extend(id)
-            target.extend(label)
+            target.extend(label.detach().cpu().numpy())
             images_1 = images_1.to(device, non_blocking=True)
             images_2 = images_2.to(device, non_blocking=True)
             images_3 = images_3.to(device, non_blocking=True)
@@ -308,7 +308,8 @@ def oof_fn_tta(test_loader, model, cfg):
             if probablitys is None:
                 probablitys = probablity
             else:
-                probablitys = torch.cat((probablity, probablitys))
+                probablitys = torch.cat((probablitys, probablity))
+
             pred = torch.argmax(probablity, 1).detach().cpu()
             if preds is None:
                 preds = pred
@@ -316,4 +317,5 @@ def oof_fn_tta(test_loader, model, cfg):
                 preds = torch.cat((preds, pred))
 
             accuracy_list.append(accuracy_score_no_softmax(pred, label))
-    return ids, target, preds.detach().cpu().numpy(), probablitys.detach().cpu().numpy(), np.mean(accuracy_list)
+    return ids, target, preds.detach().cpu().numpy(), probablitys.detach().cpu().numpy(), np.mean(
+        accuracy_list)

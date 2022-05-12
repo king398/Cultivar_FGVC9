@@ -57,7 +57,7 @@ def main(cfg):
             num_workers=cfg['num_workers'], pin_memory=cfg['pin_memory']
         )
         path = glob.glob(f"{cfg['model_dir']}/{cfg['model']}_fold{fold}*.pth")
-        model = BaseModelEffNet(cfg)
+        model = BaseModel(cfg)
         model = model.to(device)
         model.load_state_dict(torch.load(path[0]))
 
@@ -68,17 +68,21 @@ def main(cfg):
         oof_ids.extend(ids)
         oof_targets.extend(target)
         acc_list.append(accuracy)
+
         del model
         del val_loader
         del valid_dataset
         del ids, target, preds, probablity, accuracy
         torch.cuda.empty_cache()
         gc.collect()
+
     oof_pred_real = label_encoder.inverse_transform(oof_preds)
     oof_targets_real = label_encoder.inverse_transform(oof_targets)
     oof_df = pd.DataFrame.from_dict(
         {'image_id': oof_ids, 'cultivar': oof_targets_real, 'prediction': oof_pred_real, 'cultivar_int': oof_preds,
          'target_int': oof_targets})
+    print(oof_preds[:10])
+    print(np.argmax(oof_probablity, axis=1)[:10])
     oof_df.to_csv(cfg['oof_file_path'], index=False)
     np.save(cfg['oof_probablity_path'], oof_probablity)
     print(f"Mean Accuracy: {np.mean(acc_list)}")

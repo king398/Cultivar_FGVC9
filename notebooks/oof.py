@@ -57,7 +57,7 @@ def main(cfg):
             num_workers=cfg['num_workers'], pin_memory=cfg['pin_memory']
         )
         path = glob.glob(f"{cfg['model_dir']}/{cfg['model']}_fold{fold}*.pth")
-        model = BaseModel(cfg)
+        model = BaseModelEffNet(cfg)
         model = model.to(device)
         model.load_state_dict(torch.load(path[0]))
 
@@ -81,8 +81,7 @@ def main(cfg):
     oof_df = pd.DataFrame.from_dict(
         {'image_id': oof_ids, 'cultivar': oof_targets_real, 'prediction': oof_pred_real, 'cultivar_int': oof_preds,
          'target_int': oof_targets})
-    print(oof_preds[:10])
-    print(np.argmax(oof_probablity, axis=1)[:10])
+
     oof_df.to_csv(cfg['oof_file_path'], index=False)
     np.save(cfg['oof_probablity_path'], oof_probablity)
     print(f"Mean Accuracy: {np.mean(acc_list)}")

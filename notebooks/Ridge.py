@@ -4,6 +4,8 @@ import numpy as np
 from sklearn import preprocessing
 import time
 from multiprocessing import Pool
+from joblib import Parallel, delayed
+from tqdm import tqdm
 
 label_encoder = preprocessing.LabelEncoder()
 label_encoder.classes_ = np.load('/home/mithil/PycharmProjects/Cultivar_FGVC9/data/archive/classes.npy',
@@ -16,17 +18,25 @@ effnet_v2_m_probablity = np.load(
     '/home/mithil/PycharmProjects/Cultivar_FGVC9/oof/tf_efficientnetv2_m_tta_oof_probablity.npy')
 seresnext_50_probablity = np.load('/home/mithil/PycharmProjects/Cultivar_FGVC9/oof/seresnext_50_probablity.npy')
 
-print(np.argmax(seresnext_50_probablity, axis=1)[:10])
-print(target[:10])
+
 def weight(x):
     weight = np.random.random(size=2)
     weight /= np.sum(weight)
     return weight
 
 
-x = list(map(weight, range(1000000)))
+x = list(map(weight, range(10000)))
 best_weight = None
-for i in x:
-    preds = i[0] * effnet_v2_m_probablity + i[1] * seresnext_50_probablity
-    print(np.argmax(preds[0]))
-    break
+best_score = -np.inf
+
+
+def get_score(weight):
+    preds = weight[0] * effnet_v2_m_probablity + weight[1] * seresnext_50_probablity
+    preds = np.argmax(preds, axis=1)
+    accuracy = np.mean(preds == target)
+    return accuracy
+
+
+accuracy = Parallel(n_jobs=100)(delayed(get_score)(x) for x in tqdm(x, colour="blue"))
+accuracy = np.array(accuracy)
+print(f"Found Best Accuracy Blend on Cv: {np.max(accuracy)} with weight {x[np.argmax(accuracy)]}")

@@ -1,17 +1,17 @@
-model: seresnext50_32x4d
-batch_size: 24
+model: resnetv2_50x3_bitm
+batch_size: 16
 image_size: 640
 seed: 42
 pretrained: false
-num_workers: 3
+num_workers: 2
 pin_memory: true
-model_path: /Cultivar_FGVC9/models/seresnext_50
+model_path: /Cultivar_FGVC9/models/seresnext50_labelsmooth
 test_dir: /Cultivar_FGVC9/data/archive/test
 train_file_path: /Cultivar_FGVC9/data/archive/train_cultivar_mapping.csv
 
 sample_sub_file: /Cultivar_FGVC9/data/archive/sample_submission.csv
-submission_file: /Cultivar_FGVC9/submissions/tta/seresnext_50_25epoch_submission.csv
-probablity_file: /Cultivar_FGVC9/submissions/tta/seresnext_50_25epoch_probablity.npy
+submission_file: /Cultivar_FGVC9/submissions/tta/seresnext_50_25epoch_labelsmooth_submission.csv
+probablity_file: /Cultivar_FGVC9/submissions/tta/seresnext_50_25epoch_labelsmooth_probablity.npy
 target_size: 100
 device: cuda
 in_channels: 3

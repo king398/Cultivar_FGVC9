@@ -1,4 +1,4 @@
-model: seresnext50_32x4d
+model: resnetv2_50x3_bitm
 batch_size: 24
 image_size: 512
 seed: 42

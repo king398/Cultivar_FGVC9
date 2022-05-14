@@ -4,6 +4,7 @@ image_size: 640
 seed: 42
 pretrained: false
 num_workers: 3
+
 pin_memory: true
 
 train_dir: /Cultivar_FGVC9/data/archive/train

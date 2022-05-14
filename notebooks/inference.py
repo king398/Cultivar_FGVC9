@@ -41,7 +41,7 @@ def main(cfg):
     ids = list(map(lambda string: string + '.png', ids))
 
     for path in glob.glob(f"{cfg['model_path']}/*.pth"):
-        model = BaseModelEffNet(cfg)
+        model = BaseModel(cfg)
         model.load_state_dict(torch.load(path))
 
         model.to(device)

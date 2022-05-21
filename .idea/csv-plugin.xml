@@ -269,6 +269,20 @@
             </Attribute>
           </value>
         </entry>
+        <entry key="/submissions/tta/seresnext_50_25epoch_labelsmooth0.25_submission.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
+        <entry key="/submissions/tta/seresnext_50_25epoch_labelsmooth_submission.csv">
+          <value>
+            <Attribute>
+              <option name="separator" value="," />
+            </Attribute>
+          </value>
+        </entry>
         <entry key="/submissions/tta/seresnext_50_25epoch_submission.csv">
           <value>
             <Attribute>

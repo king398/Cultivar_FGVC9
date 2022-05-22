@@ -7,6 +7,7 @@ import yaml
 from sklearn import preprocessing
 from sklearn.model_selection import StratifiedKFold
 from torch.optim import *
+from timm.optim import MADGRAD
 # Function Created by me
 from dataset import *
 from model import *
@@ -56,7 +57,7 @@ def main(cfg):
 
             criterion = nn.CrossEntropyLoss(label_smoothing=0.25)
 
-            optimizer = eval(cfg['optimizer'])(model.parameters(), lr=float(cfg['lr']))
+            optimizer = MADGRAD(model.parameters(), lr=float(cfg['lr']))
             train_dataset = Cultivar_data(image_path=train_path,
                                           cfg=cfg,
                                           targets=train_labels,

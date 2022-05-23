@@ -256,9 +256,9 @@ class Snapmix_net_effnet(nn.Module):
         self.cfg = cfg
         backbone = timm.create_model(self.cfg['model'], pretrained=self.cfg['pretrained'],
                                      in_chans=self.cfg['in_channels'])
-        n_features = backbone.classifier.in_features
+        n_features = backbone.fc.in_features
         self.backbone = nn.Sequential(*backbone.children())[:-2]
-        self.classifier = nn.Linear(n_features, self.cfg['target_size'])
+        self.fc = nn.Linear(n_features, self.cfg['target_size'])
         self.pool = nn.AdaptiveAvgPool2d((1, 1))
 
     def forward_features(self, x):

@@ -35,7 +35,7 @@ device: cuda
 model_dir: /content/tf_efficientnet_b4_ns_mixup_betteraug
 n_fold: 5
 mixup: False
-cutmix: True
+cutmix: False
 cutmix_alpha: 1.0
 mixup_alpha: 1.0
 triplet_kernel_size: 7
@@ -44,6 +44,6 @@ triplet: False
 pct_start: 0.2
 div_factor: 1.0e+3
 final_div_factor: 1.0e+3
-snapmix: False
+snapmix: True
 snapmix_alpha: 1.0
 n_aug: 3

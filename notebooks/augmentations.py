@@ -271,7 +271,7 @@ def get_spm(input, target, model):
     bs = input.size(0)
     with torch.no_grad():
         output, fms = model(input)
-        clsw = model.classifier
+        clsw = model.fc
         weight = clsw.weight.data
         bias = clsw.bias.data
         weight = weight.view(weight.size(0), weight.size(1), 1, 1)

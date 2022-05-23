@@ -268,5 +268,5 @@ class Snapmix_net_effnet(nn.Module):
     def forward(self, x):
         feats = self.forward_features(x)
         x = self.pool(feats).view(x.size(0), -1)
-        x = self.classifier(x)
+        x = self.fc(x)
         return x, feats

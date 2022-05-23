@@ -20,10 +20,7 @@ def get_train_transforms(DIM):
             A.ShiftScaleRotate(shift_limit=0.1, scale_limit=0.1, rotate_limit=45, p=0.5),
             A.RandomBrightnessContrast(brightness_limit=0.2, contrast_limit=0.2, p=0.5),
             A.CoarseDropout(),
-            A.GaussNoise(),
-            A.Affine(),
-            A.OpticalDistortion(),
-            A.GridDistortion(),
+
 
 
 
